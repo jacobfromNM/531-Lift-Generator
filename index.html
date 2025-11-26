@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <!-- META bullshit -->
+    <meta charset="utf-8">
+    <meta name="author" content="Jacob Davis">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <!-- Open Graph Protocol Tags -->
+    <meta property="og:title" content="5-3-1 Lift Generator">
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://531.com">
+    <meta property="og:description"
+        content="A website that calculates lift charts based on the 5-3-1 plan by Jim Wendler">
+    <meta property="og:locale" content="en_US">
+    <meta property="og:site_name" content="5-3-1 Calculator">
+
+    <title>5-3-1 Lift Generator</title>
+    <link rel="icon" type="image/x-icon" href="resources/websiteIcon.png">
+
+    <!-- Lexend Font Embed -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Lexend:wght@100..900&display=swap" rel="stylesheet">
+
+    <!-- Stylesheet - always located in the 'head' section -->
+    <link rel="stylesheet" href="styles/styles.css">
+</head>
+
+<body>
+
+    <h1>5-3-1 Lift Generator</h1>
+
+    <nav>
+        <!-- If needed, navigation links will go here... -->
+    </nav>
+
+    <input type="file" id="fileInput" onchange="loadFile(event)" style="display: none;" />
+    <div class="sectionContainer">
+        <button id="selectFileButton" onclick="document.getElementById('fileInput').click()">Upload a JSON
+            File...</button>
+        <p>Or, Enter Your 1RM Values Manually Below:</p>
+        <input type="number" placeholder="Bench Press 1RM" id="benchPressInput" required maxlength="3"><br><br>
+        <input type="number" placeholder="Squat 1RM" id="squatInput" required maxlength="3"><br><br>
+        <input type="number" placeholder="Deadlift 1RM" id="deadliftInput" required maxlength="3"><br><br>
+        <input type="number" placeholder="Overhead Press 1RM" id="overheadPressInput" required maxlength="3"><br><br>
+        <button type="button" id="generateButton" onclick="onGenerateButtonClick()">Generate Lift Chart</button><br>
+        <p>Export your provided data as a JSON file:</p>
+        <button type="button" id="exportButton" onclick="exportData()">Export JSON</button>
+    </div>
+
+    <!-- Table Section -->
+    <div class="sectionContainer">
+        <table id="benchPressTable">
+            <caption id="benchCaption">Bench Press</caption>
+            <tr>
+                <th>Week</th>
+                <th>Set 1</th>
+                <th>Set 2</th>
+                <th>Set 3</th>
+                <th>Set 4</th>
+                <th>Set 5</th>
+                <th>Set 6</th>
+                <th>Set 7-12</th>
+            </tr>
+        </table>
+        <table id="squatTable">
+            <caption id="squatCaption">Squat</caption>
+            <tr>
+                <th>Week</th>
+                <th>Set 1</th>
+                <th>Set 2</th>
+                <th>Set 3</th>
+                <th>Set 4</th>
+                <th>Set 5</th>
+                <th>Set 6</th>
+                <th>Set 7-12</th>
+            </tr>
+        </table>
+        <table id="deadliftTable">
+            <caption id="deadLiftCaption">Deadlift</caption>
+            <tr>
+                <th>Week</th>
+                <th>Set 1</th>
+                <th>Set 2</th>
+                <th>Set 3</th>
+                <th>Set 4</th>
+                <th>Set 5</th>
+                <th>Set 6</th>
+                <th>Set 7-12</th>
+            </tr>
+        </table>
+        <table id="overheadPressTable">
+            <caption id="overHeadPressCaption">Overhead Press</caption>
+            <tr>
+                <th>Week</th>
+                <th>Set 1</th>
+                <th>Set 2</th>
+                <th>Set 3</th>
+                <th>Set 4</th>
+                <th>Set 5</th>
+                <th>Set 6</th>
+                <th>Set 7-12</th>
+            </tr>
+        </table>
+    </div>
+
+    <!-- If the screen is too small... -->
+    <div class="warningContainer" id="tooSmall">
+        <p>Uh oh! The screen is too small!</p>
+    </div>
+
+    <!-- One Rep Max Calculator Section -->
+    <form class="sectionContainer" id="tooSmall">
+        <!-- The 'required' and 'maxlength' properties would be applied to a form. -->
+        <h3>Calculate 1RM</h3>
+        <input type="number" placeholder="Weight Lifted" id="weight" required max="3"><br><br>
+        <input type="number" placeholder="Reps Performed" id="reps" required max="2"><br><br>
+        <label>1RM:</label>
+        <label id="oneRepMaxFinal"></label><br><br>
+        <button type="button" id="oneRepMaxButton" onclick="onCalculateButtonClick()">Calculate 1RM</button><br>
+    </form>
+
+    <!-- Reps Needed to Hit Target 1RM -->
+    <form class="sectionContainer" id="tooSmall">
+        <h3>Reps Needed to Hit Target 1RM</h3>
+        <input type="number" placeholder="Current Weight Loaded" id="loadedWeight" required min="1" step="1"><br><br>
+        <input type="number" placeholder="Target 1RM" id="target1rm" required min="1" step="1"><br><br>
+
+        <label>Reps Needed:</label>
+        <label id="repsNeededOutput"></label><br><br>
+
+        <button type="button" id="repsNeededButton" onclick="onRepsNeededClick()">Calculate Reps</button><br>
+        <small id="repsNeededNote" style="display:block; margin-top:6px; color:#555;"></small>
+    </form>
+
+
+    <!-- Copyright Section -->
+    <footer id="copyright">
+        <small>&copy; Copyright Jacob Davis (2025) - Based on<a
+                href=https://www.jimwendler.com/blogs/jimwendler-com/101065094-5-3-1-for-a-beginner>Jim Wendler's 5-3-1
+                Beginner Template.</a></small>
+    </footer>
+
+    <!-- JavaScript Src... -->
+    <script src="scripts/scripts.js"></script>
+</body>
+
+</html>

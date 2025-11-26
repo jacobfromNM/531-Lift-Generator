@@ -1,0 +1,185 @@
+* {
+    font-family: 'Lexend', sans-serif;
+}
+
+@media only screen and (max-width: 600px) {
+
+    .jsonButton,
+    .sectionContainer,
+    #benchPressTable {
+        display: none;
+    }
+}
+
+@media only screen and (max-width: 600px) {
+    #tooSmall {
+        display: block;
+    }
+}
+
+
+html {
+    /* Set an initial background image using inline style */
+    background-size: cover !important;
+    background-attachment: fixed;
+    background-repeat: no-repeat;
+    background-position: center;
+    min-width: 100% !important;
+    min-height: 100% !important;
+}
+
+h1 {
+    color: rgb(255, 255, 255);
+    text-align: center;
+    text-shadow: 0px 0px 10px #131313c5;
+}
+
+.jsonButton {
+    text-align: center;
+}
+
+#selectFileButton,
+#oneRepMaxButton,
+#repsNeededButton,
+#generateButton,
+#exportButton {
+    background-color: rgba(57, 48, 42, 0.585);
+    color: white;
+    padding: 12px 20px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+#selectFileButton:hover,
+#oneRepMaxButton:hover,
+#repsNeededButton:hover,
+#generateButton:hover,
+#exportButton:hover {
+    background-color: #505050;
+}
+
+#copyright,
+a {
+    text-align: center;
+    margin: 15px;
+    color: rgb(255, 255, 255);
+    font-weight: bold;
+    text-shadow: 0px 0px 10px #131313c5;
+}
+
+.sectionContainer {
+    text-align: center;
+    background-color: #f3f3f3ef;
+    margin-left: 10%;
+    margin-right: 10%;
+    margin-top: 20px;
+    padding: 2%;
+    border-radius: 15px;
+    box-shadow: 0 0 20px #131313c5;
+}
+
+.warningContainer {
+    display: none;
+    text-align: center;
+    background-color: #f3f3f3ef;
+    margin-left: 10%;
+    margin-right: 10%;
+    margin-top: 20px;
+    padding: 2%;
+    border-radius: 15px;
+    box-shadow: 0 0 20px #131313c5;
+    font-weight: bold;
+    color: #333;
+}
+
+caption {
+    padding-bottom: 5px;
+    font-weight: bold;
+}
+
+
+input[type=file] {
+    display: block;
+    margin: 0 auto;
+}
+
+button {
+    margin: 5px;
+}
+
+input[type=number] {
+    box-shadow: 0 0 15px 4px rgba(0, 0, 0, 0.104);
+    border-radius: 6px;
+    padding: 10px;
+}
+
+input:focus:invalid {
+    border: 2px rgb(127, 23, 23);
+}
+
+table {
+    border-collapse: collapse;
+    margin: 10px auto;
+    margin-bottom: 20px;
+    font-size: 12px;
+    box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+}
+
+td,
+th {
+    border: 1px solid #ddd;
+    padding: 8px;
+}
+
+td:hover {
+    box-shadow: 0 0 20px rgba(0, 0, 0, 0.3);
+}
+
+form {
+    background-color: #ffffff;
+    margin-left: 10%;
+    margin-right: 10%;
+    margin-top: 20px;
+    padding: 2%;
+    border-radius: 15px;
+    box-shadow: 0 0 20px rgba(0, 0, 0, 0.3);
+}
+
+th {
+    text-align: center;
+    padding-top: 12px;
+    padding-bottom: 12px;
+    background-color: rgba(57, 48, 42, 0.585);
+    color: white;
+}
+
+.cell-tooltip:hover:after {
+    content: attr(data-title);
+    position: fixed;
+    top: 90%;
+    /* Adjust this value as needed */
+    left: 50%;
+    transform: translateX(-50%);
+    white-space: nowrap;
+    z-index: 1;
+    padding: 1%;
+    border-radius: 8px;
+    font-weight: bold;
+    font-size: 20px;
+    background-color: rgb(41, 46, 51);
+    box-shadow: 0 0 20px rgba(0, 0, 0, 0.3);
+    color: #fff;
+}
+
+
+.cell-tooltip:hover:before {
+    content: "";
+    position: relative;
+    top: -8px;
+    left: 50%;
+    transform: translateX(-50%) rotate(45deg);
+    width: 16px;
+    height: 16px;
+    background-color: #333;
+}
