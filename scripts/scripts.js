@@ -284,6 +284,9 @@ function calculatePlates(weight) {
 
 // Function to calculate one rep max using Epley formula...
 function calculateOneRepMax(weight, reps) {
+    if (reps == 0) {
+        return 0;
+    }
 
     if (reps == 1) {
         return weight;
@@ -303,6 +306,11 @@ function onCalculateButtonClick() {
 
     // Calculate one rep max
     const oneRepMax = calculateOneRepMax(weight, reps);
+
+    if (oneRepMax === 0) {
+        document.querySelector('#oneRepMaxFinal').textContent = 'Reps value must be greater than zero';
+        return;
+    }
 
     // Display result in text field
     document.querySelector('#oneRepMaxFinal').textContent = oneRepMax;
