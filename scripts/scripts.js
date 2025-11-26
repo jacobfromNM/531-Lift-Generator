@@ -284,10 +284,15 @@ function calculatePlates(weight) {
 
 // Function to calculate one rep max using Epley formula...
 function calculateOneRepMax(weight, reps) {
+
+    if (reps == 1) {
+        return weight;
+    }
+
     const oneRepMax = weight * (1 + 0.0333 * reps);
 
     // Remove any decimal points
-    return Math.trunc((oneRepMax / 5) * 5);
+    return Math.round((oneRepMax / 5) * 5);
 }
 
 // Function to handle "Calculate One Rep Max" button click
