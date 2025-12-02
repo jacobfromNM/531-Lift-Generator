@@ -171,15 +171,19 @@ function populateTable(tableId, max) {
             addSet(row, trainingMax, 0.95, 1);
             addSet(row, trainingMax, 0.55, 10);
         } else if (week == 4) {
-            addSet(row, trainingMax, 0.5, 10);
+            addSet(row, trainingMax, 0.35, 5);
+            addSet(row, trainingMax, 0.45, 5);
+            addSet(row, trainingMax, 0.5, 3);
+            addSet(row, trainingMax, 0.55, 10);
             addSet(row, trainingMax, 0.6, 10);
-            addSet(row, trainingMax, 0.7, 10);
+            addSet(row, trainingMax, 0.65, 10);
         } else if (week == 5) {
             addSet(row, trainingMax, 0.35, 5);
             addSet(row, trainingMax, 0.45, 5);
-            addSet(row, trainingMax, 0.7, 10);
+            addSet(row, trainingMax, 0.5, 3);
+            addSet(row, trainingMax, 0.65, 10);
+            addSet(row, trainingMax, 0.70, 10);
             addSet(row, trainingMax, 0.75, 10);
-            addSet(row, trainingMax, 0.80, 10);
         }
     }
 }
@@ -195,8 +199,15 @@ function addSet(row, trainingMax, percentageOfTrainingMax, reps) {
     // hovered above a table's cell.
     let barWeight = 45;
     let plates = calculatePlates((weight - barWeight) / 2);
-    let tooltipText = plates.map(p => p + " lbs").join(" + ");
-    setCell.setAttribute("data-title", tooltipText);
+
+    // If plates is empty, it means no plates are needed (i.e., just the bar), return "Bar Only"
+    if (plates.length === 0) {
+        setCell.setAttribute("data-title", "Bar Or Dumbbells");
+        return;
+    } else {
+        let tooltipText = plates.map(p => p + " lbs").join(" + ");
+        setCell.setAttribute("data-title", tooltipText);
+    }
 }
 
 function roundToNearest5(x) {
@@ -206,7 +217,7 @@ function roundToNearest5(x) {
 // To be used if an unlimited amount of 45lb plates is available...
 
 function calculatePlates(weight) {
-    let plates = [45, 35, 25, 10, 5, 2.5];
+    let plates = [45, 35, 25, 15, 10, 5, 2.5];
     let result = [];
     for (let i = 0; i < plates.length; i++) {
         while (weight >= plates[i]) {
@@ -303,12 +314,23 @@ function onCalculateButtonClick() {
     // Get user input for weight lifted and reps performed
     const weight = parseInt(document.querySelector('#weight').value);
     const reps = parseInt(document.querySelector('#reps').value);
+    const outEl = document.querySelector('#oneRepMaxFinal');
+    const noteEl = document.querySelector('#oneRepMaxNote');
+
+    // Reset output
+    outEl.textContent = '';
+    noteEl.textContent = '';
 
     // Calculate one rep max
     const oneRepMax = calculateOneRepMax(weight, reps);
 
+    // Warn user that the Epley formula is less reliable for high reps
+    if (reps > 10) {
+        noteEl.textContent = 'Note: Estimates above ~10 reps are less reliable. Consider using a heavier weight for better accuracy.';
+    }
+
     if (oneRepMax === 0) {
-        document.querySelector('#oneRepMaxFinal').textContent = 'Reps value must be greater than zero';
+        document.querySelector('#oneRepMaxFinal').textContent = '—';
         return;
     }
 
