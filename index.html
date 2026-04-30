@@ -1,151 +1,826 @@
 <!DOCTYPE html>
-<html lang="en">
-
+<html lang="en" data-theme="gruvbox">
 <head>
-    <!-- META bullshit -->
-    <meta charset="utf-8">
-    <meta name="author" content="Jacob Davis">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="author" content="Jacob Davis">
+  <meta property="og:title" content="5-3-1 Lift Generator">
+  <meta property="og:description" content="A website that calculates lift charts based on the 5-3-1 plan by Jim Wendler">
+  <title>5-3-1 Lift Generator</title>
+  <link href="https://fonts.googleapis.com/css2?family=Lexend:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+    html { min-height: 100%; }
 
-    <!-- Open Graph Protocol Tags -->
-    <meta property="og:title" content="5-3-1 Lift Generator">
-    <meta property="og:type" content="website">
-    <meta property="og:url" content="https://531.com">
-    <meta property="og:description"
-        content="A website that calculates lift charts based on the 5-3-1 plan by Jim Wendler">
-    <meta property="og:locale" content="en_US">
-    <meta property="og:site_name" content="5-3-1 Calculator">
+    /* ══════════════════════════════════════════════════
+       THEME TOKENS
+    ══════════════════════════════════════════════════ */
 
-    <title>5-3-1 Lift Generator</title>
-    <link rel="icon" type="image/x-icon" href="resources/websiteIcon.png">
+    /* ── 1. Gruvbox Dark (default) ────────────────── */
+    [data-theme="gruvbox"] {
+      --bg:            #282828;
+      --bg-noise:      url("data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='200' height='200'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.72' numOctaves='4' stitchTiles='stitch'/><feColorMatrix type='saturate' values='0'/></filter><rect width='200' height='200' filter='url(%23n)' opacity='0.032'/></svg>");
+      --bg-glow1:      radial-gradient(ellipse 55% 50% at  8%  8%,  rgba(69,133,136,0.11)  0%, transparent 65%);
+      --bg-glow2:      radial-gradient(ellipse 55% 50% at 92%  8%,  rgba(215,153,33,0.10)  0%, transparent 65%);
+      --bg-glow3:      radial-gradient(ellipse 55% 50% at  8% 92%,  rgba(204,36,29,0.09)   0%, transparent 65%);
+      --bg-glow4:      radial-gradient(ellipse 55% 50% at 92% 92%,  rgba(104,157,106,0.09) 0%, transparent 65%);
 
-    <!-- Lexend Font Embed -->
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Lexend:wght@100..900&display=swap" rel="stylesheet">
+      --fg:            #ebdbb2;
+      --fg1:           #d5c4a1;
+      --fg2:           #bdae93;
+      --gray:          #928374;
+      --card-bg:       rgba(60,56,54,0.42);
+      --card-blur:     blur(24px);
+      --card-shadow:   0 8px 32px rgba(0,0,0,0.4);
+      --card-radius:   16px;
+      --input-bg:      rgba(28,28,28,0.65);
+      --input-color:   #ebdbb2;
+      --border-subtle: rgba(255,255,255,0.07);
+      --row-divider:   rgba(255,255,255,0.04);
+      --highlight-row: rgba(152,151,26,0.25);
+      --logo-slash:    #665c54;
+      --footer-color:  #928374;
 
-    <!-- Stylesheet - always located in the 'head' section -->
-    <link rel="stylesheet" href="styles/styles.css">
+      /* accent */
+      --accent:        #b16286;
+      --accent-top:    #b16286;
+      --accent-border: rgba(177,98,134,0.22);
+      --accent-label:  #d3869b;
+      --accent-divider:rgba(177,98,134,0.18);
+
+      /* lift colors */
+      --bench-m:   #458588; --bench-b:   #83a598; --bench-bg: rgba(69,133,136,0.10);  --bench-border: rgba(69,133,136,0.28);  --bench-th: rgba(69,133,136,0.18);  --bench-th-bdr: rgba(69,133,136,0.25);
+      --squat-m:   #d79921; --squat-b:   #fabd2f; --squat-bg: rgba(215,153,33,0.10);  --squat-border: rgba(215,153,33,0.28);  --squat-th: rgba(215,153,33,0.18);  --squat-th-bdr: rgba(215,153,33,0.25);
+      --dl-m:      #cc241d; --dl-b:      #fb4934; --dl-bg:    rgba(204,36,29,0.10);   --dl-border:    rgba(204,36,29,0.28);   --dl-th:    rgba(204,36,29,0.18);   --dl-th-bdr:    rgba(204,36,29,0.25);
+      --ohp-m:     #689d6a; --ohp-b:     #8ec07c; --ohp-bg:   rgba(104,157,106,0.10); --ohp-border:   rgba(104,157,106,0.28); --ohp-th:   rgba(104,157,106,0.18); --ohp-th-bdr:   rgba(104,157,106,0.25);
+
+      --btn-primary-bg: linear-gradient(135deg,#b16286,#458588);
+      --btn-primary-fg: #fff;
+      --btn-ghost-bg:   rgba(177,98,134,0.1);
+      --btn-ghost-fg:   #d3869b;
+      --btn-ghost-bdr:  rgba(177,98,134,0.28);
+      --btn-ghost2-bg:  rgba(255,255,255,0.04);
+      --btn-ghost2-fg:  #bdae93;
+      --btn-ghost2-bdr: rgba(255,255,255,0.1);
+
+      --week-inactive-bg:  rgba(255,255,255,0.05);
+      --week-inactive-fg:  #928374;
+      --week-inactive-bdr: rgba(255,255,255,0.1);
+
+      --logo1: #83a598; --logo2: #fabd2f; --logo3: #fb4934;
+    }
+
+    /* ── 2. Claude Light ───────────────────────────── */
+    [data-theme="claude"] {
+      --bg:            #f5f0e8;
+      --bg-noise:      url("data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='200' height='200'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.72' numOctaves='4' stitchTiles='stitch'/><feColorMatrix type='saturate' values='0'/></filter><rect width='200' height='200' filter='url(%23n)' opacity='0.025'/></svg>");
+      --bg-glow1:      radial-gradient(ellipse 55% 50% at  8%  8%,  rgba(214,93,14,0.10)  0%, transparent 65%);
+      --bg-glow2:      radial-gradient(ellipse 55% 50% at 92%  8%,  rgba(200,80,30,0.07)  0%, transparent 65%);
+      --bg-glow3:      radial-gradient(ellipse 55% 50% at  8% 92%,  rgba(180,60,10,0.07)  0%, transparent 65%);
+      --bg-glow4:      radial-gradient(ellipse 55% 50% at 92% 92%,  rgba(214,130,50,0.06) 0%, transparent 65%);
+
+      --fg:            #2d1f0e;
+      --fg1:           #4a3520;
+      --fg2:           #6b5040;
+      --gray:          #9c7a5e;
+      --card-bg:       rgba(255,248,238,0.72);
+      --card-blur:     blur(20px);
+      --card-shadow:   0 4px 24px rgba(120,60,10,0.10);
+      --card-radius:   16px;
+      --input-bg:      rgba(255,250,244,0.9);
+      --input-color:   #2d1f0e;
+      --border-subtle: rgba(180,120,60,0.12);
+      --row-divider:   rgba(180,120,60,0.08);
+      --highlight-row: rgba(214,93,14,0.12);
+      --logo-slash:    #c9a882;
+      --footer-color:  #9c7a5e;
+
+      --accent:        #d65d0e;
+      --accent-top:    #d65d0e;
+      --accent-border: rgba(214,93,14,0.22);
+      --accent-label:  #d65d0e;
+      --accent-divider:rgba(214,93,14,0.15);
+
+      --bench-m:   #b85c00; --bench-b:   #d4720a; --bench-bg: rgba(184,92,0,0.07);   --bench-border: rgba(184,92,0,0.22);   --bench-th: rgba(184,92,0,0.10);   --bench-th-bdr: rgba(184,92,0,0.18);
+      --squat-m:   #a04800; --squat-b:   #c45a00; --squat-bg: rgba(160,72,0,0.07);   --squat-border: rgba(160,72,0,0.22);   --squat-th: rgba(160,72,0,0.10);   --squat-th-bdr: rgba(160,72,0,0.18);
+      --dl-m:      #8b1a00; --dl-b:      #b02200; --dl-bg:    rgba(139,26,0,0.07);   --dl-border:    rgba(139,26,0,0.22);   --dl-th:    rgba(139,26,0,0.10);   --dl-th-bdr:    rgba(139,26,0,0.18);
+      --ohp-m:     #7a5c1e; --ohp-b:     #9c7428; --ohp-bg:   rgba(122,92,30,0.07);  --ohp-border:   rgba(122,92,30,0.22);  --ohp-th:   rgba(122,92,30,0.10);  --ohp-th-bdr:   rgba(122,92,30,0.18);
+
+      --btn-primary-bg: linear-gradient(135deg,#d65d0e,#a04000);
+      --btn-primary-fg: #fff;
+      --btn-ghost-bg:   rgba(214,93,14,0.08);
+      --btn-ghost-fg:   #d65d0e;
+      --btn-ghost-bdr:  rgba(214,93,14,0.28);
+      --btn-ghost2-bg:  rgba(180,120,60,0.06);
+      --btn-ghost2-fg:  #6b5040;
+      --btn-ghost2-bdr: rgba(180,120,60,0.18);
+
+      --week-inactive-bg:  rgba(180,120,60,0.06);
+      --week-inactive-fg:  #9c7a5e;
+      --week-inactive-bdr: rgba(180,120,60,0.15);
+
+      --logo1: #d65d0e; --logo2: #a04000; --logo3: #8b1a00;
+    }
+
+    /* ── 3. GitHub Dark ────────────────────────────── */
+    [data-theme="github"] {
+      --bg:            #0d1117;
+      --bg-noise:      url("data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='200' height='200'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.72' numOctaves='4' stitchTiles='stitch'/><feColorMatrix type='saturate' values='0'/></filter><rect width='200' height='200' filter='url(%23n)' opacity='0.022'/></svg>");
+      --bg-glow1:      radial-gradient(ellipse 55% 50% at  8%  8%,  rgba(56,139,253,0.09)  0%, transparent 65%);
+      --bg-glow2:      radial-gradient(ellipse 55% 50% at 92%  8%,  rgba(63,185,80,0.07)   0%, transparent 65%);
+      --bg-glow3:      radial-gradient(ellipse 55% 50% at  8% 92%,  rgba(188,140,255,0.07) 0%, transparent 65%);
+      --bg-glow4:      radial-gradient(ellipse 55% 50% at 92% 92%,  rgba(56,139,253,0.06)  0%, transparent 65%);
+
+      --fg:            #e6edf3;
+      --fg1:           #c9d1d9;
+      --fg2:           #8b949e;
+      --gray:          #6e7681;
+      --card-bg:       rgba(22,27,34,0.80);
+      --card-blur:     blur(20px);
+      --card-shadow:   0 8px 32px rgba(0,0,0,0.55);
+      --card-radius:   12px;
+      --input-bg:      rgba(13,17,23,0.8);
+      --input-color:   #e6edf3;
+      --border-subtle: rgba(48,54,61,0.8);
+      --row-divider:   rgba(48,54,61,0.6);
+      --highlight-row: rgba(63,185,80,0.15);
+      --logo-slash:    #30363d;
+      --footer-color:  #6e7681;
+
+      --accent:        #388bfd;
+      --accent-top:    #388bfd;
+      --accent-border: rgba(56,139,253,0.22);
+      --accent-label:  #79c0ff;
+      --accent-divider:rgba(56,139,253,0.15);
+
+      --bench-m:   #388bfd; --bench-b:   #79c0ff; --bench-bg: rgba(56,139,253,0.08);  --bench-border: rgba(56,139,253,0.25);  --bench-th: rgba(56,139,253,0.14);  --bench-th-bdr: rgba(56,139,253,0.22);
+      --squat-m:   #3fb950; --squat-b:   #56d364; --squat-bg: rgba(63,185,80,0.08);   --squat-border: rgba(63,185,80,0.25);   --squat-th: rgba(63,185,80,0.14);   --squat-th-bdr: rgba(63,185,80,0.22);
+      --dl-m:      #f85149; --dl-b:      #ff7b72; --dl-bg:    rgba(248,81,73,0.08);   --dl-border:    rgba(248,81,73,0.25);   --dl-th:    rgba(248,81,73,0.14);   --dl-th-bdr:    rgba(248,81,73,0.22);
+      --ohp-m:     #bc8cff; --ohp-b:     #d2a8ff; --ohp-bg:   rgba(188,140,255,0.08); --ohp-border:   rgba(188,140,255,0.25); --ohp-th:   rgba(188,140,255,0.14); --ohp-th-bdr:   rgba(188,140,255,0.22);
+
+      --btn-primary-bg: linear-gradient(135deg,#238636,#1f6feb);
+      --btn-primary-fg: #fff;
+      --btn-ghost-bg:   rgba(56,139,253,0.08);
+      --btn-ghost-fg:   #79c0ff;
+      --btn-ghost-bdr:  rgba(56,139,253,0.28);
+      --btn-ghost2-bg:  rgba(255,255,255,0.04);
+      --btn-ghost2-fg:  #8b949e;
+      --btn-ghost2-bdr: rgba(48,54,61,0.8);
+
+      --week-inactive-bg:  rgba(48,54,61,0.5);
+      --week-inactive-fg:  #6e7681;
+      --week-inactive-bdr: rgba(48,54,61,0.8);
+
+      --logo1: #79c0ff; --logo2: #56d364; --logo3: #ff7b72;
+    }
+
+    /* ══════════════════════════════════════════════════
+       BASE STYLES (use tokens)
+    ══════════════════════════════════════════════════ */
+
+    body {
+      font-family: 'Lexend', sans-serif;
+      color: var(--fg);
+      min-height: 100vh;
+      background-color: var(--bg);
+      background-image: var(--bg-noise), var(--bg-glow1), var(--bg-glow2), var(--bg-glow3), var(--bg-glow4);
+      padding: 40px 32px 64px;
+      transition: background-color 0.35s, color 0.35s;
+    }
+
+    .label-xs  { font-size: 11px; letter-spacing: 0.05em; color: var(--fg2); }
+    .text-gray { color: var(--gray); }
+
+    /* ── Cards ─────────────────────────────────────── */
+    .card {
+      background: var(--card-bg);
+      backdrop-filter: var(--card-blur);
+      -webkit-backdrop-filter: var(--card-blur);
+      border-radius: var(--card-radius);
+      box-shadow: var(--card-shadow);
+      padding: 26px;
+      transition: background 0.35s, border-color 0.35s;
+    }
+    .card-accent {
+      border: 1px solid var(--accent-border);
+      border-top: 3px solid var(--accent-top);
+    }
+    .card-bench    { border: 1px solid var(--bench-border);  border-top: 3px solid var(--bench-m);  background: var(--bench-bg); }
+    .card-squat    { border: 1px solid var(--squat-border);  border-top: 3px solid var(--squat-m);  background: var(--squat-bg); }
+    .card-deadlift { border: 1px solid var(--dl-border);     border-top: 3px solid var(--dl-m);     background: var(--dl-bg);    }
+    .card-ohp      { border: 1px solid var(--ohp-border);    border-top: 3px solid var(--ohp-m);    background: var(--ohp-bg);   }
+    .card-teal     { border: 1px solid var(--ohp-border);    border-top: 3px solid var(--ohp-m);    background: var(--ohp-bg);   }
+    .card-blue     { border: 1px solid var(--bench-border);  border-top: 3px solid var(--bench-m);  background: var(--bench-bg); }
+
+    /* ── Inputs ────────────────────────────────────── */
+    input[type=number] {
+      background: var(--input-bg);
+      border: 1px solid var(--bench-border);
+      border-radius: 10px;
+      color: var(--input-color);
+      padding: 11px 14px;
+      font-size: 15px;
+      font-family: 'Lexend', sans-serif;
+      width: 100%;
+      transition: border-color 0.2s, background 0.35s;
+    }
+    input[type=number]:focus { outline: none; border-color: var(--accent); }
+    input[type=number]::-webkit-inner-spin-button,
+    input[type=number]::-webkit-outer-spin-button { -webkit-appearance: none; }
+    input[type=number] { -moz-appearance: textfield; }
+
+    .inp-bench    { border-color: var(--bench-border) !important; }
+    .inp-bench:focus    { border-color: var(--bench-b) !important; }
+    .inp-squat    { border-color: var(--squat-border) !important; }
+    .inp-squat:focus    { border-color: var(--squat-b) !important; }
+    .inp-deadlift { border-color: var(--dl-border) !important; }
+    .inp-deadlift:focus { border-color: var(--dl-b) !important; }
+    .inp-ohp      { border-color: var(--ohp-border) !important; }
+    .inp-ohp:focus      { border-color: var(--ohp-b) !important; }
+
+    /* ── Buttons ───────────────────────────────────── */
+    .btn {
+      display: inline-flex; align-items: center; gap: 6px;
+      border: none; border-radius: 10px;
+      padding: 12px 22px; font-family: 'Lexend', sans-serif;
+      font-size: 14px; font-weight: 600; cursor: pointer;
+      transition: opacity 0.15s, transform 0.1s;
+      white-space: nowrap;
+    }
+    .btn:hover  { opacity: 0.86; transform: translateY(-1px); }
+    .btn:active { transform: translateY(0); }
+    .btn-primary { background: var(--btn-primary-bg); color: var(--btn-primary-fg); }
+    .btn-ghost   { background: var(--btn-ghost-bg);   color: var(--btn-ghost-fg);   border: 1px solid var(--btn-ghost-bdr); }
+    .btn-ghost2  { background: var(--btn-ghost2-bg);  color: var(--btn-ghost2-fg);  border: 1px solid var(--btn-ghost2-bdr); }
+    .btn-lift    { border-radius: 8px; padding: 10px 18px; font-size: 13px; }
+
+    /* ── Week tabs ─────────────────────────────────── */
+    .week-tabs { display: flex; gap: 6px; flex-wrap: wrap; }
+    .week-tab {
+      background: var(--week-inactive-bg);
+      color: var(--week-inactive-fg);
+      border: 1px solid var(--week-inactive-bdr);
+      border-radius: 8px; padding: 7px 16px;
+      font-family: 'Lexend', sans-serif; font-size: 12px; font-weight: 600;
+      cursor: pointer; transition: background 0.15s, color 0.15s, border-color 0.15s;
+    }
+    .week-tab.active-1 { background: var(--bench-bg); color: var(--bench-b); border-color: var(--bench-border); }
+    .week-tab.active-2 { background: var(--squat-bg); color: var(--squat-b); border-color: var(--squat-border); }
+    .week-tab.active-3 { background: var(--dl-bg);    color: var(--dl-b);    border-color: var(--dl-border);    }
+    .week-tab.active-4 { background: var(--ohp-bg);   color: var(--ohp-b);   border-color: var(--ohp-border);   }
+    .week-tab.active-5 { background: var(--ohp-bg);   color: var(--ohp-b);   border-color: var(--ohp-border);   }
+
+    /* ── Layout ────────────────────────────────────── */
+    .container    { max-width: 1120px; margin: 0 auto; }
+    .grid-4       { display: grid; grid-template-columns: repeat(4,1fr); gap: 14px; }
+    .grid-2       { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+    .grid-2-bottom{ display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+    .stack        { display: flex; flex-direction: column; gap: 18px; }
+    .row          { display: flex; align-items: center; gap: 12px; }
+    .mb-18        { margin-bottom: 18px; }
+    .mb-14        { margin-bottom: 14px; }
+
+    /* ── Tables ────────────────────────────────────── */
+    table { width: 100%; border-collapse: collapse; }
+    thead th {
+      padding: 9px 12px; font-size: 11px; font-weight: 700;
+      text-align: center; letter-spacing: 0.1em; text-transform: uppercase;
+    }
+    tbody td {
+      padding: 8px 12px; font-size: 13px; text-align: center;
+      border-bottom: 1px solid var(--row-divider);
+      transition: background 0.15s;
+    }
+    tbody tr:last-child td { border-bottom: none; }
+    tbody tr.warm td { color: var(--gray); }
+    tbody td.weight-cell { font-size: 14px; font-weight: 600; }
+    tbody td.reps-cell   { font-size: 14px; font-weight: 700; }
+    tbody tr.highlighted td { background: var(--highlight-row) !important; }
+
+    .th-bench    { background: var(--bench-th); color: var(--bench-b); border-bottom: 1px solid var(--bench-th-bdr); }
+    .th-squat    { background: var(--squat-th); color: var(--squat-b); border-bottom: 1px solid var(--squat-th-bdr); }
+    .th-deadlift { background: var(--dl-th);    color: var(--dl-b);    border-bottom: 1px solid var(--dl-th-bdr);    }
+    .th-ohp      { background: var(--ohp-th);   color: var(--ohp-b);   border-bottom: 1px solid var(--ohp-th-bdr);   }
+
+    /* ── Tag pills ─────────────────────────────────── */
+    .tag { display: inline-block; font-size: 11px; font-weight: 700; letter-spacing: 0.06em; border-radius: 20px; padding: 4px 10px; }
+    .tag-bench    { background: var(--bench-th);  color: var(--bench-b); border: 1px solid var(--bench-border); }
+    .tag-squat    { background: var(--squat-th);  color: var(--squat-b); border: 1px solid var(--squat-border); }
+    .tag-deadlift { background: var(--dl-th);     color: var(--dl-b);    border: 1px solid var(--dl-border);    }
+    .tag-ohp      { background: var(--ohp-th);    color: var(--ohp-b);   border: 1px solid var(--ohp-border);   }
+
+    /* ── Header ────────────────────────────────────── */
+    header { text-align: center; margin-bottom: 36px; }
+    .logo  { display: inline-flex; align-items: baseline; gap: 2px; margin-bottom: 6px; }
+    .logo-digit { font-size: 48px; font-weight: 800; letter-spacing: -0.04em; line-height: 1; }
+    .logo-slash { font-size: 30px; font-weight: 800; color: var(--logo-slash); }
+    .logo-sub   { font-size: 12px; letter-spacing: 0.14em; text-transform: uppercase; color: var(--fg2); }
+
+    /* ── Lift card header ──────────────────────────── */
+    .lift-header { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 14px; }
+    .lift-title  { font-size: 17px; font-weight: 700; color: var(--fg); }
+    .lift-meta   { font-size: 11px; color: var(--fg2); margin-top: 3px; }
+
+    /* ── Section label ─────────────────────────────── */
+    .section-label {
+      font-size: 12px; text-transform: uppercase; letter-spacing: 0.1em;
+      color: var(--accent-label); font-weight: 600; margin-bottom: 16px;
+      padding-bottom: 10px; border-bottom: 1px solid var(--accent-divider);
+    }
+
+    /* ── Calc ──────────────────────────────────────── */
+    .calc-result { display: flex; align-items: center; gap: 14px; flex-wrap: wrap; }
+    .calc-output { font-size: 13px; color: var(--fg2); }
+    .result-num  { font-size: 22px; font-weight: 700; }
+    .note-small  { font-size: 12px; color: var(--gray); margin-top: 8px; }
+
+    /* ── Footer ────────────────────────────────────── */
+    footer      { text-align: center; margin-top: 36px; color: var(--footer-color); font-size: 12px; }
+    footer a    { color: var(--footer-color); }
+
+    /* ── Warning ───────────────────────────────────── */
+    .warning-card { display: none; text-align: center; font-weight: 600; }
+
+    /* ══════════════════════════════════════════════════
+       THEME PICKER CARD
+    ══════════════════════════════════════════════════ */
+    .theme-picker {
+      display: flex; align-items: center; gap: 16px; flex-wrap: wrap;
+    }
+    .theme-picker-label {
+      font-size: 12px; text-transform: uppercase; letter-spacing: 0.1em;
+      color: var(--fg2); font-weight: 600; white-space: nowrap;
+    }
+    .theme-options { display: flex; gap: 10px; }
+    .theme-btn {
+      display: flex; align-items: center; gap: 10px;
+      padding: 10px 16px; border-radius: 12px; cursor: pointer;
+      border: 2px solid transparent;
+      background: var(--week-inactive-bg);
+      transition: border-color 0.2s, background 0.2s, transform 0.1s;
+      font-family: 'Lexend', sans-serif;
+    }
+    .theme-btn:hover { transform: translateY(-1px); }
+    .theme-btn.selected { border-color: var(--accent); }
+    .theme-btn-swatch {
+      width: 32px; height: 32px; border-radius: 8px;
+      flex-shrink: 0; overflow: hidden; display: flex;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.25);
+    }
+    .theme-btn-swatch span { flex: 1; }
+    .theme-btn-info { display: flex; flex-direction: column; gap: 2px; }
+    .theme-btn-name { font-size: 13px; font-weight: 600; color: var(--fg); }
+    .theme-btn-desc { font-size: 11px; color: var(--fg2); }
+
+    /* ── Responsive ────────────────────────────────── */
+    @media (max-width: 700px) {
+      .grid-4, .grid-2, .grid-2-bottom { grid-template-columns: 1fr; }
+      .row { flex-wrap: wrap; }
+      .warning-card { display: block; }
+      .theme-options { flex-wrap: wrap; }
+    }
+  </style>
 </head>
-
 <body>
+  <div class="container">
 
-    <h1>5-3-1 Lift Generator</h1>
+    <!-- Header -->
+    <header>
+      <div class="logo">
+        <span class="logo-digit" id="logo1" style="color:var(--logo1)">5</span>
+        <span class="logo-slash">/</span>
+        <span class="logo-digit" id="logo2" style="color:var(--logo2)">3</span>
+        <span class="logo-slash">/</span>
+        <span class="logo-digit" id="logo3" style="color:var(--logo3)">1</span>
+      </div>
+      <div class="logo-sub">Lift Generator</div>
+    </header>
 
-    <nav>
-        <!-- If needed, navigation links will go here... -->
-    </nav>
+    <div class="stack">
 
-    <input type="file" id="fileInput" onchange="loadFile(event)" style="display: none;" />
-    <div class="sectionContainer">
-        <button id="selectFileButton" onclick="document.getElementById('fileInput').click()">Upload a JSON
-            File...</button>
-        <p>Or, Enter Your 1RM Values Manually Below:</p>
-        <input type="number" placeholder="Bench Press 1RM" id="benchPressInput" required maxlength="3"><br><br>
-        <input type="number" placeholder="Squat 1RM" id="squatInput" required maxlength="3"><br><br>
-        <input type="number" placeholder="Deadlift 1RM" id="deadliftInput" required maxlength="3"><br><br>
-        <input type="number" placeholder="Overhead Press 1RM" id="overheadPressInput" required maxlength="3"><br><br>
-        <button type="button" id="generateButton" onclick="onGenerateButtonClick()">Generate Lift Chart</button><br>
-        <p>Export your provided data as a JSON file:</p>
-        <button type="button" id="exportButton" onclick="exportData()">Export JSON</button>
+      <!-- ── Theme picker ── -->
+      <div class="card card-accent">
+        <div class="theme-picker">
+          <span class="theme-picker-label">Theme</span>
+          <div class="theme-options">
+
+            <!-- Claude Light -->
+            <button class="theme-btn" id="tbtn-claude" onclick="setTheme('claude')" title="Claude Light">
+              <div class="theme-btn-swatch">
+                <span style="background:#f5f0e8"></span>
+                <span style="background:#d65d0e"></span>
+                <span style="background:#8b1a00"></span>
+              </div>
+              <div class="theme-btn-info">
+                <span class="theme-btn-name">Claude</span>
+                <span class="theme-btn-desc">Warm cream &amp; sienna</span>
+              </div>
+            </button>
+
+            <!-- Gruvbox Dark -->
+            <button class="theme-btn selected" id="tbtn-gruvbox" onclick="setTheme('gruvbox')" title="Gruvbox Dark">
+              <div class="theme-btn-swatch">
+                <span style="background:#282828"></span>
+                <span style="background:#d79921"></span>
+                <span style="background:#689d6a"></span>
+              </div>
+              <div class="theme-btn-info">
+                <span class="theme-btn-name">Gruvbox</span>
+                <span class="theme-btn-desc">Dark &amp; retro warm</span>
+              </div>
+            </button>
+
+            <!-- GitHub Dark -->
+            <button class="theme-btn" id="tbtn-github" onclick="setTheme('github')" title="GitHub Dark">
+              <div class="theme-btn-swatch">
+                <span style="background:#0d1117"></span>
+                <span style="background:#388bfd"></span>
+                <span style="background:#3fb950"></span>
+              </div>
+              <div class="theme-btn-info">
+                <span class="theme-btn-name">GitHub Dark</span>
+                <span class="theme-btn-desc">Slate &amp; neon accents</span>
+              </div>
+            </button>
+
+          </div>
+        </div>
+      </div>
+
+      <!-- ── Input card ── -->
+      <div class="card card-accent">
+        <div class="section-label">Your 1 Rep Maxes</div>
+        <div class="grid-4 mb-18">
+          <div>
+            <label class="label-xs" style="display:block;margin-bottom:6px;color:var(--bench-b);font-weight:600;">Bench Press</label>
+            <input type="number" id="benchPressInput" class="inp-bench" placeholder="e.g. 225" maxlength="3">
+          </div>
+          <div>
+            <label class="label-xs" style="display:block;margin-bottom:6px;color:var(--squat-b);font-weight:600;">Squat</label>
+            <input type="number" id="squatInput" class="inp-squat" placeholder="e.g. 315" maxlength="3">
+          </div>
+          <div>
+            <label class="label-xs" style="display:block;margin-bottom:6px;color:var(--dl-b);font-weight:600;">Deadlift</label>
+            <input type="number" id="deadliftInput" class="inp-deadlift" placeholder="e.g. 405" maxlength="3">
+          </div>
+          <div>
+            <label class="label-xs" style="display:block;margin-bottom:6px;color:var(--ohp-b);font-weight:600;">Overhead Press</label>
+            <input type="number" id="overheadPressInput" class="inp-ohp" placeholder="e.g. 135" maxlength="3">
+          </div>
+        </div>
+        <div class="row">
+          <button class="btn btn-primary" onclick="onGenerateButtonClick()">Generate Lift Chart</button>
+          <button class="btn btn-ghost"  onclick="document.getElementById('fileInput').click()">Upload JSON</button>
+          <button class="btn btn-ghost2" onclick="exportData()">Export JSON</button>
+        </div>
+        <input type="file" id="fileInput" style="display:none" onchange="loadFile(event)" accept=".json">
+      </div>
+
+      <!-- ── Week tabs ── -->
+      <div id="weekSelectorRow" style="display:none;">
+        <div class="week-tabs" id="weekTabs">
+          <button class="week-tab active-1" onclick="setWeek(1)">Week 1 · 5/5/5+</button>
+          <button class="week-tab"          onclick="setWeek(2)">Week 2 · 3/3/3+</button>
+          <button class="week-tab"          onclick="setWeek(3)">Week 3 · 5/3/1+</button>
+          <button class="week-tab"          onclick="setWeek(4)">Deload</button>
+          <button class="week-tab"          onclick="setWeek(5)">Hypertrophy</button>
+        </div>
+      </div>
+
+      <!-- ── Lift cards ── -->
+      <div id="liftCards" style="display:none;">
+        <div class="grid-2">
+          <div class="card card-bench">
+            <div class="lift-header">
+              <div><div class="lift-title">Bench Press</div><div class="lift-meta" id="benchMeta">—</div></div>
+              <span class="tag tag-bench" id="benchTag">—</span>
+            </div>
+            <table><thead id="benchHead"></thead><tbody id="benchBody"></tbody></table>
+          </div>
+          <div class="card card-squat">
+            <div class="lift-header">
+              <div><div class="lift-title">Squat</div><div class="lift-meta" id="squatMeta">—</div></div>
+              <span class="tag tag-squat" id="squatTag">—</span>
+            </div>
+            <table><thead id="squatHead"></thead><tbody id="squatBody"></tbody></table>
+          </div>
+          <div class="card card-deadlift">
+            <div class="lift-header">
+              <div><div class="lift-title">Deadlift</div><div class="lift-meta" id="deadliftMeta">—</div></div>
+              <span class="tag tag-deadlift" id="deadliftTag">—</span>
+            </div>
+            <table><thead id="deadliftHead"></thead><tbody id="deadliftBody"></tbody></table>
+          </div>
+          <div class="card card-ohp">
+            <div class="lift-header">
+              <div><div class="lift-title">Overhead Press</div><div class="lift-meta" id="ohpMeta">—</div></div>
+              <span class="tag tag-ohp" id="ohpTag">—</span>
+            </div>
+            <table><thead id="ohpHead"></thead><tbody id="ohpBody"></tbody></table>
+          </div>
+        </div>
+      </div>
+
+      <!-- ── Calculators ── -->
+      <div class="grid-2-bottom">
+        <div class="card card-teal">
+          <div class="lift-title" style="color:var(--ohp-b);margin-bottom:14px;">Calculate 1RM</div>
+          <div class="grid-2 mb-14">
+            <div>
+              <label class="label-xs" style="display:block;margin-bottom:6px;">Weight Lifted</label>
+              <input type="number" id="weight" placeholder="e.g. 200" class="inp-ohp">
+            </div>
+            <div>
+              <label class="label-xs" style="display:block;margin-bottom:6px;">Reps Performed</label>
+              <input type="number" id="reps" placeholder="e.g. 5" class="inp-ohp">
+            </div>
+          </div>
+          <div class="calc-result">
+            <button class="btn btn-lift" style="background:var(--ohp-m);color:#fff;border:none;" onclick="onCalculateButtonClick()">Calculate</button>
+            <span class="calc-output">1RM: <strong id="oneRepMaxFinal" class="result-num" style="color:var(--ohp-b)">—</strong></span>
+          </div>
+          <p class="note-small" id="oneRepMaxNote"></p>
+        </div>
+        <div class="card card-blue">
+          <div class="lift-title" style="color:var(--bench-b);margin-bottom:14px;">Reps to Hit Target 1RM</div>
+          <div class="grid-2 mb-14">
+            <div>
+              <label class="label-xs" style="display:block;margin-bottom:6px;">Weight on Bar</label>
+              <input type="number" id="loadedWeight" placeholder="e.g. 185" class="inp-bench">
+            </div>
+            <div>
+              <label class="label-xs" style="display:block;margin-bottom:6px;">Target 1RM</label>
+              <input type="number" id="target1rm" placeholder="e.g. 225" class="inp-bench">
+            </div>
+          </div>
+          <div class="calc-result">
+            <button class="btn btn-lift" style="background:var(--bench-m);color:#fff;border:none;" onclick="onRepsNeededClick()">Calculate</button>
+            <span class="calc-output">Reps needed: <strong id="repsNeededOutput" class="result-num" style="color:var(--bench-b)">—</strong></span>
+          </div>
+          <p class="note-small" id="repsNeededNote"></p>
+        </div>
+      </div>
+
+      <!-- ── Small screen warning ── -->
+      <div class="card warning-card" style="border:1px solid var(--dl-border);border-top:3px solid var(--dl-m);background:var(--dl-bg);">
+        <p style="color:var(--dl-b)">Screen too small for lift tables.<br>Please use a wider device.</p>
+      </div>
+
     </div>
 
-    <!-- Table Section -->
-    <div class="sectionContainer">
-        <table id="benchPressTable">
-            <caption id="benchCaption">Bench Press</caption>
-            <tr>
-                <th>Week</th>
-                <th>Set 1 (Warm up)</th>
-                <th>Set 2 (Warm up)</th>
-                <th>Set 3 (Warm up)</th>
-                <th>Set 4</th>
-                <th>Set 5</th>
-                <th>Set 6</th>
-                <th>Set 7-12 (AMRAP)</th>
-            </tr>
-        </table>
-        <table id="squatTable">
-            <caption id="squatCaption">Squat</caption>
-            <tr>
-                <th>Week</th>
-                <th>Set 1 (Warm up)</th>
-                <th>Set 2 (Warm up)</th>
-                <th>Set 3 (Warm up)</th>
-                <th>Set 4</th>
-                <th>Set 5</th>
-                <th>Set 6</th>
-                <th>Set 7-12 (AMRAP)</th>
-            </tr>
-        </table>
-        <table id="deadliftTable">
-            <caption id="deadLiftCaption">Deadlift</caption>
-            <tr>
-                <th>Week</th>
-                <th>Set 1 (Warm up)</th>
-                <th>Set 2 (Warm up)</th>
-                <th>Set 3 (Warm up)</th>
-                <th>Set 4</th>
-                <th>Set 5</th>
-                <th>Set 6</th>
-                <th>Set 7-12 (AMRAP)</th>
-            </tr>
-        </table>
-        <table id="overheadPressTable">
-            <caption id="overHeadPressCaption">Overhead Press</caption>
-            <tr>
-                <th>Week</th>
-                <th>Set 1 (Warm up)</th>
-                <th>Set 2 (Warm up)</th>
-                <th>Set 3 (Warm up)</th>
-                <th>Set 4</th>
-                <th>Set 5</th>
-                <th>Set 6</th>
-                <th>Set 7-12 (AMRAP)</th>
-            </tr>
-        </table>
-    </div>
-
-    <!-- If the screen is too small... -->
-    <div class="warningContainer" id="tooSmall">
-        <p>Uh oh! The screen is too small!</p>
-    </div>
-
-    <!-- One Rep Max Calculator Section -->
-    <form class="sectionContainer" id="tooSmall">
-        <!-- The 'required' and 'maxlength' properties would be applied to a form. -->
-        <h3>Calculate 1RM</h3>
-        <input type="number" placeholder="Weight Lifted" id="weight" required max="3"><br><br>
-        <input type="number" placeholder="Reps Performed" id="reps" required max="2"><br><br>
-        <label>1RM:</label>
-        <label id="oneRepMaxFinal"></label><br><br>
-        <button type="button" id="oneRepMaxButton" onclick="onCalculateButtonClick()">Calculate 1RM</button><br>
-        <small id="oneRepMaxNote" style="display:block; margin-top:6px; color:#555;"></small>
-    </form>
-
-    <!-- Reps Needed to Hit Target 1RM -->
-    <form class="sectionContainer" id="tooSmall">
-        <h3>Reps Needed to Hit Target 1RM</h3>
-        <input type="number" placeholder="Current Weight Loaded" id="loadedWeight" required min="1" step="1"><br><br>
-        <input type="number" placeholder="Target 1RM" id="target1rm" required min="1" step="1"><br><br>
-
-        <label>Reps Needed:</label>
-        <label id="repsNeededOutput"></label><br><br>
-
-        <button type="button" id="repsNeededButton" onclick="onRepsNeededClick()">Calculate Reps</button><br>
-        <small id="repsNeededNote" style="display:block; margin-top:6px; color:#555;"></small>
-    </form>
-
-
-    <!-- Copyright Section -->
-    <footer id="copyright">
-        <small>&copy; Copyright Jacob Davis (2025) - Based on<a
-                href=https://www.jimwendler.com/blogs/jimwendler-com/101065094-5-3-1-for-a-beginner>Jim Wendler's 5-3-1
-                Beginner Template.</a></small>
+    <footer>
+      <small>&copy; Jacob Davis (2025) &mdash; Based on
+        <a href="https://www.jimwendler.com/blogs/jimwendler-com/101065094-5-3-1-for-a-beginner" target="_blank">
+          Jim Wendler's 5-3-1 Beginner Template
+        </a>
+      </small>
     </footer>
+  </div>
 
-    <!-- JavaScript Src... -->
-    <script src="scripts/scripts.js"></script>
+  <script>
+    /* ─── Theme ──────────────────────────────────────── */
+    const THEMES = ['claude','gruvbox','github'];
+
+    function setTheme(t) {
+      document.documentElement.setAttribute('data-theme', t);
+      localStorage.setItem('531_theme', t);
+      THEMES.forEach(id => {
+        const btn = document.getElementById('tbtn-' + id);
+        if (btn) btn.classList.toggle('selected', id === t);
+      });
+    }
+
+    // Restore saved theme immediately
+    (function() {
+      const saved = localStorage.getItem('531_theme');
+      if (saved && THEMES.includes(saved)) setTheme(saved);
+    })();
+
+    /* ─── State ──────────────────────────────────────── */
+    let data = null;
+    let currentWeek = 1;
+
+    const WEEK_LABELS = { 1:'5/5/5+', 2:'3/3/3+', 3:'5/3/1+', 4:'Deload', 5:'Hypertrophy' };
+
+    const LIFTS = [
+      { key:'benchPress',    bodyId:'benchBody',    headId:'benchHead',    metaId:'benchMeta',    tagId:'benchTag',    cls:'bench'    },
+      { key:'squat',         bodyId:'squatBody',    headId:'squatHead',    metaId:'squatMeta',    tagId:'squatTag',    cls:'squat'    },
+      { key:'deadlift',      bodyId:'deadliftBody', headId:'deadliftHead', metaId:'deadliftMeta', tagId:'deadliftTag', cls:'deadlift' },
+      { key:'overheadPress', bodyId:'ohpBody',      headId:'ohpHead',      metaId:'ohpMeta',      tagId:'ohpTag',      cls:'ohp'      },
+    ];
+
+    /* ─── Restore saved data ─────────────────────────── */
+    (function restore() {
+      try {
+        const saved = localStorage.getItem('531_data');
+        const savedWeek = localStorage.getItem('531_week');
+        if (saved) {
+          data = JSON.parse(saved);
+          const d = data;
+          if (d.benchPress)    document.getElementById('benchPressInput').value    = d.benchPress;
+          if (d.squat)         document.getElementById('squatInput').value         = d.squat;
+          if (d.deadlift)      document.getElementById('deadliftInput').value      = d.deadlift;
+          if (d.overheadPress) document.getElementById('overheadPressInput').value = d.overheadPress;
+          currentWeek = savedWeek ? parseInt(savedWeek) : 1;
+          renderAll();
+        }
+      } catch(e) {}
+    })();
+
+    /* ─── Math ───────────────────────────────────────── */
+    function roundToNearest5(x) { return Math.round(x / 5) * 5; }
+
+    function calculatePlates(weight) {
+      const plates = [45,35,25,15,10,5,2.5];
+      const result = [];
+      for (const p of plates) { while (weight >= p) { result.push(p); weight -= p; } }
+      return result;
+    }
+
+    function plateTooltip(weight) {
+      const plates = calculatePlates((weight - 45) / 2);
+      return plates.length === 0 ? 'Bar Only' : plates.map(p => p + ' lbs').join(' + ');
+    }
+
+    /* ─── Set schemes ────────────────────────────────── */
+    function getSetsForWeek(trainingMax, week) {
+      const tm = trainingMax;
+      const warm = [{ pct:0.35,reps:5 },{ pct:0.45,reps:5 },{ pct:0.55,reps:3 }];
+      const workSets = {
+        1:[{ pct:0.65,reps:5  },{ pct:0.75,reps:5  },{ pct:0.85,reps:'5+'},{ pct:0.55,reps:10 }],
+        2:[{ pct:0.70,reps:3  },{ pct:0.80,reps:3  },{ pct:0.90,reps:'3+'},{ pct:0.55,reps:10 }],
+        3:[{ pct:0.75,reps:5  },{ pct:0.85,reps:3  },{ pct:0.95,reps:'1+'},{ pct:0.55,reps:10 }],
+        4:[{ pct:0.55,reps:10 },{ pct:0.60,reps:10 },{ pct:0.65,reps:10 }],
+        5:[{ pct:0.65,reps:10 },{ pct:0.70,reps:10 },{ pct:0.75,reps:10 }],
+      };
+      return {
+        warm: warm.map(s => ({ ...s, weight: roundToNearest5(tm * s.pct) })),
+        work: (workSets[week]||[]).map(s => ({ ...s, weight: roundToNearest5(tm * s.pct) })),
+      };
+    }
+
+    /* ─── CSS var helper ─────────────────────────────── */
+    function cssVar(name) {
+      return getComputedStyle(document.documentElement).getPropertyValue(name).trim();
+    }
+
+    /* ─── Render ─────────────────────────────────────── */
+    function renderAll() {
+      if (!data) return;
+      document.getElementById('weekSelectorRow').style.display = 'block';
+      document.getElementById('liftCards').style.display = 'block';
+      updateWeekTabs();
+
+      LIFTS.forEach(({ key, bodyId, headId, metaId, tagId, cls }) => {
+        const max = data[key];
+        const tm  = roundToNearest5(max * 0.9);
+        const { warm, work } = getSetsForWeek(tm, currentWeek);
+        const varName = cls === 'deadlift' ? 'dl' : cls;
+
+        document.getElementById(metaId).textContent = `1RM: ${max} lbs · Training Max: ${tm} lbs`;
+        document.getElementById(tagId).textContent   = WEEK_LABELS[currentWeek];
+
+        // Header
+        const head = document.getElementById(headId);
+        head.innerHTML = `<tr>
+          <th class="th-${cls}">Set</th>
+          <th class="th-${cls}">%TM</th>
+          <th class="th-${cls}">Weight</th>
+          <th class="th-${cls}">Reps</th>
+          <th class="th-${cls}">Plates / Side</th>
+        </tr>`;
+
+        // Body
+        const tbody = document.getElementById(bodyId);
+        tbody.innerHTML = '';
+        const liftColor = cssVar(`--${varName}-b`);
+
+        warm.forEach((s, i) => {
+          const tr = document.createElement('tr');
+          tr.className = 'warm';
+          tr.innerHTML = `
+            <td>W${i+1}</td>
+            <td>${Math.round(s.pct*100)}%</td>
+            <td class="weight-cell">${s.weight} lbs</td>
+            <td class="reps-cell">${s.reps}</td>
+            <td style="font-size:12px">${plateTooltip(s.weight)}</td>`;
+          tbody.appendChild(tr);
+        });
+
+        work.forEach((s, i) => {
+          const tr = document.createElement('tr');
+          tr.innerHTML = `
+            <td style="color:var(--fg2)">${i+1}</td>
+            <td style="color:var(--gray)">${Math.round(s.pct*100)}%</td>
+            <td class="weight-cell" style="color:var(--fg)">${s.weight} lbs</td>
+            <td class="reps-cell" style="color:${liftColor}">${s.reps}</td>
+            <td style="font-size:12px;color:var(--gray)">${plateTooltip(s.weight)}</td>`;
+          tr.style.cursor = 'pointer';
+          tr.addEventListener('click', () => tr.classList.toggle('highlighted'));
+          tbody.appendChild(tr);
+        });
+      });
+    }
+
+    /* ─── Week tabs ──────────────────────────────────── */
+    function setWeek(w) {
+      currentWeek = w;
+      localStorage.setItem('531_week', w);
+      updateWeekTabs();
+      renderAll();
+    }
+
+    function updateWeekTabs() {
+      document.querySelectorAll('.week-tab').forEach((tab, i) => {
+        tab.className = 'week-tab';
+        if (i + 1 === currentWeek) tab.classList.add(`active-${currentWeek}`);
+      });
+    }
+
+    /* ─── Generate ───────────────────────────────────── */
+    function onGenerateButtonClick() {
+      const bench = parseInt(document.getElementById('benchPressInput').value);
+      const squat = parseInt(document.getElementById('squatInput').value);
+      const dl    = parseInt(document.getElementById('deadliftInput').value);
+      const ohp   = parseInt(document.getElementById('overheadPressInput').value);
+      if ([bench,squat,dl,ohp].some(v => isNaN(v) || v <= 0)) { alert('Please enter valid positive numbers for all four lifts.'); return; }
+      if ([bench,squat,dl,ohp].some(v => v > 999)) { alert('Please enter realistic values (under 1000 lbs).'); return; }
+      data = { benchPress:bench, squat, deadlift:dl, overheadPress:ohp };
+      localStorage.setItem('531_data', JSON.stringify(data));
+      renderAll();
+    }
+
+    /* ─── JSON ───────────────────────────────────────── */
+    function loadFile(event) {
+      const file = event.target.files[0]; if (!file) return;
+      const reader = new FileReader();
+      reader.onload = e => {
+        try {
+          data = JSON.parse(e.target.result);
+          const d = data;
+          if (d.benchPress)    document.getElementById('benchPressInput').value    = d.benchPress;
+          if (d.squat)         document.getElementById('squatInput').value         = d.squat;
+          if (d.deadlift)      document.getElementById('deadliftInput').value      = d.deadlift;
+          if (d.overheadPress) document.getElementById('overheadPressInput').value = d.overheadPress;
+          localStorage.setItem('531_data', JSON.stringify(data));
+          renderAll();
+        } catch(err) { alert('Error: Invalid JSON file.'); }
+      };
+      reader.onerror = () => alert('Error reading file.');
+      reader.readAsText(file);
+    }
+
+    function exportData() {
+      if (!data) { alert('Generate a chart first.'); return; }
+      const blob = new Blob([JSON.stringify(data,null,2)],{type:'application/json'});
+      const url  = URL.createObjectURL(blob);
+      const a    = document.createElement('a');
+      a.href = url; a.download = 'lift_data.json';
+      document.body.appendChild(a); a.click();
+      document.body.removeChild(a); URL.revokeObjectURL(url);
+    }
+
+    /* ─── 1RM ────────────────────────────────────────── */
+    function calculateOneRepMax(w, r) {
+      if (r === 0) return 0;
+      if (r === 1) return w;
+      return roundToNearest5(w * (1 + 0.0333 * r));
+    }
+
+    function onCalculateButtonClick() {
+      const w = parseInt(document.getElementById('weight').value);
+      const r = parseInt(document.getElementById('reps').value);
+      const out = document.getElementById('oneRepMaxFinal');
+      const note = document.getElementById('oneRepMaxNote');
+      out.textContent = '—'; note.textContent = '';
+      if (isNaN(w)||isNaN(r)||w<=0||r<=0) return;
+      out.textContent = calculateOneRepMax(w,r) || '—';
+      if (r > 10) note.textContent = 'Note: estimates above ~10 reps are less reliable.';
+    }
+
+    /* ─── Reps needed ────────────────────────────────── */
+    function onRepsNeededClick() {
+      const w = Number(document.getElementById('loadedWeight').value);
+      const t = Number(document.getElementById('target1rm').value);
+      const out = document.getElementById('repsNeededOutput');
+      const note = document.getElementById('repsNeededNote');
+      out.textContent = '—'; note.textContent = '';
+      if (!Number.isFinite(w)||!Number.isFinite(t)||w<=0||t<=0) { note.textContent='Enter positive numbers for both fields.'; return; }
+      if (t <= w) { out.textContent='1'; note.textContent='One rep already puts your estimated 1RM at or above target.'; return; }
+      let reps = Math.min(20, Math.max(1, Math.ceil(30*(t/w-1))));
+      out.textContent = String(reps);
+      if (reps >= 13) note.textContent = 'Estimates above ~12 reps are less reliable. Consider increasing load.';
+      else if (reps <= 3) note.textContent = 'Low-rep estimate — good accuracy. Warm up well.';
+    }
+
+    /* ─── Enter keys ─────────────────────────────────── */
+    document.addEventListener('keydown', e => {
+      if (e.key !== 'Enter') return;
+      const id = document.activeElement && document.activeElement.id;
+      if (['weight','reps'].includes(id))                                                { e.preventDefault(); onCalculateButtonClick(); }
+      if (['loadedWeight','target1rm'].includes(id))                                     { e.preventDefault(); onRepsNeededClick(); }
+      if (['benchPressInput','squatInput','deadliftInput','overheadPressInput'].includes(id)) { e.preventDefault(); onGenerateButtonClick(); }
+    });
+  </script>
 </body>
-
 </html>
