@@ -123,6 +123,60 @@
     }
 
     /* ── 3. GitHub Dark ────────────────────────────── */
+    /* ── 3. Apprentice ───────────────────────────────── */
+    [data-theme="apprentice"] {
+      --bg:            #262626;
+      --bg-noise:      url("data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='200' height='200'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.72' numOctaves='4' stitchTiles='stitch'/><feColorMatrix type='saturate' values='0'/></filter><rect width='200' height='200' filter='url(%23n)' opacity='0.030'/></svg>");
+      --bg-glow1:      radial-gradient(ellipse 55% 50% at  8%  8%,  rgba(95,135,175,0.10)  0%, transparent 65%);
+      --bg-glow2:      radial-gradient(ellipse 55% 50% at 92%  8%,  rgba(135,135,95,0.09)  0%, transparent 65%);
+      --bg-glow3:      radial-gradient(ellipse 55% 50% at  8% 92%,  rgba(175,95,95,0.08)   0%, transparent 65%);
+      --bg-glow4:      radial-gradient(ellipse 55% 50% at 92% 92%,  rgba(95,135,95,0.08)   0%, transparent 65%);
+
+      --fg:            #bcbcbc;
+      --fg1:           #a8a8a8;
+      --fg2:           #8a8a8a;
+      --gray:          #6c6c6c;
+      --card-bg:       rgba(68,68,68,0.38);
+      --card-blur:     blur(24px);
+      --card-shadow:   0 8px 32px rgba(0,0,0,0.45);
+      --card-radius:   16px;
+      --input-bg:      rgba(28,28,28,0.65);
+      --input-color:   #bcbcbc;
+      --border-subtle: rgba(255,255,255,0.07);
+      --row-divider:   rgba(255,255,255,0.04);
+      --highlight-row: rgba(135,135,95,0.22);
+      --logo-slash:    #444444;
+      --footer-color:  #6c6c6c;
+
+      /* accent — cyan */
+      --accent:        #5fafaf;
+      --accent-top:    #5fafaf;
+      --accent-border: rgba(95,175,175,0.22);
+      --accent-label:  #5fafaf;
+      --accent-divider:rgba(95,175,175,0.18);
+
+      /* lift colors */
+      --bench-m:   #5f87af; --bench-b:   #8fafd7; --bench-bg: rgba(95,135,175,0.10);  --bench-border: rgba(95,135,175,0.28);  --bench-th: rgba(95,135,175,0.18);  --bench-th-bdr: rgba(95,135,175,0.25);
+      --squat-m:   #87875f; --squat-b:   #ffffaf; --squat-bg: rgba(135,135,95,0.10);  --squat-border: rgba(135,135,95,0.28);  --squat-th: rgba(135,135,95,0.18);  --squat-th-bdr: rgba(135,135,95,0.25);
+      --dl-m:      #af5f5f; --dl-b:      #ff8700; --dl-bg:    rgba(175,95,95,0.10);   --dl-border:    rgba(175,95,95,0.28);   --dl-th:    rgba(175,95,95,0.18);   --dl-th-bdr:    rgba(175,95,95,0.25);
+      --ohp-m:     #5f875f; --ohp-b:     #87af87; --ohp-bg:   rgba(95,135,95,0.10);   --ohp-border:   rgba(95,135,95,0.28);   --ohp-th:   rgba(95,135,95,0.18);   --ohp-th-bdr:   rgba(95,135,95,0.25);
+
+      --btn-primary-bg: linear-gradient(135deg,#5f87af,#5f8787);
+      --btn-primary-fg: #fff;
+      --btn-ghost-bg:   rgba(95,175,175,0.10);
+      --btn-ghost-fg:   #5fafaf;
+      --btn-ghost-bdr:  rgba(95,175,175,0.28);
+      --btn-ghost2-bg:  rgba(255,255,255,0.04);
+      --btn-ghost2-fg:  #8a8a8a;
+      --btn-ghost2-bdr: rgba(255,255,255,0.10);
+
+      --week-inactive-bg:  rgba(255,255,255,0.05);
+      --week-inactive-fg:  #6c6c6c;
+      --week-inactive-bdr: rgba(255,255,255,0.10);
+
+      --logo1: #8fafd7; --logo2: #ffffaf; --logo3: #ff8700;
+    }
+
     [data-theme="github"] {
       --bg:            #0d1117;
       --bg-noise:      url("data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='200' height='200'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.72' numOctaves='4' stitchTiles='stitch'/><feColorMatrix type='saturate' values='0'/></filter><rect width='200' height='200' filter='url(%23n)' opacity='0.022'/></svg>");
@@ -514,6 +568,19 @@
               </div>
             </button>
 
+            <!-- Apprentice -->
+            <button class="theme-btn" id="tbtn-apprentice" onclick="setTheme('apprentice')" title="Apprentice">
+              <div class="theme-btn-swatch">
+                <span style="background:#262626"></span>
+                <span style="background:#8fafd7"></span>
+                <span style="background:#ff8700"></span>
+              </div>
+              <div class="theme-btn-info">
+                <span class="theme-btn-name">Apprentice</span>
+                <span class="theme-btn-desc">Muted dark &amp; desaturated</span>
+              </div>
+            </button>
+
             <!-- GitHub Dark -->
             <button class="theme-btn" id="tbtn-github" onclick="setTheme('github')" title="GitHub Dark">
               <div class="theme-btn-swatch">
@@ -680,7 +747,7 @@
 
   <script>
     /* ─── Theme ──────────────────────────────────────── */
-    const THEMES = ['claude','gruvbox','github'];
+    const THEMES = ['claude','gruvbox','apprentice','github'];
 
     function setTheme(t) {
       document.documentElement.setAttribute('data-theme', t);
