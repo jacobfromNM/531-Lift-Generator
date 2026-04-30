@@ -372,6 +372,90 @@
     .theme-btn-name { font-size: 13px; font-weight: 600; color: var(--fg); }
     .theme-btn-desc { font-size: 11px; color: var(--fg2); }
 
+    /* ── Lift focus modal ──────────────────────────── */
+    .lift-modal-backdrop {
+      display: none;
+      position: fixed; inset: 0; z-index: 100;
+      background: rgba(0,0,0,0);
+      backdrop-filter: blur(0px);
+      -webkit-backdrop-filter: blur(0px);
+      transition: background 0.28s, backdrop-filter 0.28s;
+      align-items: center; justify-content: center;
+    }
+    .lift-modal-backdrop.open {
+      display: flex;
+      background: rgba(0,0,0,0.55);
+      backdrop-filter: blur(10px);
+      -webkit-backdrop-filter: blur(10px);
+    }
+    /* two-step transition: display:flex first, then opacity on next frame */
+    .lift-modal-backdrop.open { animation: backdropIn 0.28s ease forwards; }
+    @keyframes backdropIn {
+      from { background: rgba(0,0,0,0); backdrop-filter: blur(0px); -webkit-backdrop-filter: blur(0px); }
+      to   { background: rgba(0,0,0,0.55); backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px); }
+    }
+
+    .lift-modal {
+      position: relative;
+      width: min(820px, 94vw);
+      max-height: 88vh;
+      overflow-y: auto;
+      padding: 32px;
+      border-radius: var(--card-radius);
+      background: var(--card-bg);
+      backdrop-filter: blur(32px);
+      -webkit-backdrop-filter: blur(32px);
+      box-shadow: 0 24px 80px rgba(0,0,0,0.6);
+      transform: translateY(16px) scale(0.97);
+      opacity: 0;
+      transition: transform 0.28s cubic-bezier(0.34,1.28,0.64,1), opacity 0.22s ease;
+    }
+    .lift-modal-backdrop.open .lift-modal {
+      transform: translateY(0) scale(1);
+      opacity: 1;
+    }
+
+    .lift-modal-close {
+      position: absolute; top: 16px; right: 18px;
+      background: rgba(255,255,255,0.08); border: 1px solid rgba(255,255,255,0.12);
+      border-radius: 50%; width: 32px; height: 32px;
+      display: flex; align-items: center; justify-content: center;
+      cursor: pointer; font-size: 16px; color: var(--fg2);
+      transition: background 0.15s, color 0.15s;
+      font-family: 'Lexend', sans-serif; line-height: 1;
+    }
+    .lift-modal-close:hover { background: rgba(255,255,255,0.15); color: var(--fg); }
+
+    .lift-modal-title { font-size: 22px; font-weight: 700; color: var(--fg); margin-bottom: 4px; }
+    .lift-modal-meta  { font-size: 12px; color: var(--fg2); margin-bottom: 20px; }
+
+    /* Bigger table inside modal */
+    .lift-modal table { width: 100%; border-collapse: collapse; }
+    .lift-modal thead th { padding: 11px 16px; font-size: 12px; font-weight: 700; text-align: center; letter-spacing: 0.1em; text-transform: uppercase; }
+    .lift-modal tbody td { padding: 12px 16px; font-size: 14px; text-align: center; border-bottom: 1px solid var(--row-divider); transition: background 0.15s; }
+    .lift-modal tbody tr:last-child td { border-bottom: none; }
+    .lift-modal tbody tr.warm td { color: var(--gray); }
+    .lift-modal tbody td.weight-cell { font-size: 16px; font-weight: 600; }
+    .lift-modal tbody td.reps-cell   { font-size: 16px; font-weight: 700; }
+    .lift-modal tbody tr.highlighted td { background: var(--highlight-row) !important; }
+
+    /* card clickable affordance */
+    .card-lift-clickable {
+      cursor: pointer;
+      transition: transform 0.15s, box-shadow 0.15s;
+    }
+    .card-lift-clickable:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 16px 48px rgba(0,0,0,0.5);
+    }
+    .card-lift-clickable:active { transform: translateY(0); }
+
+    /* hint label */
+    .expand-hint {
+      font-size: 11px; color: var(--gray); text-align: right;
+      margin-top: 10px; letter-spacing: 0.04em; opacity: 0.7;
+    }
+
     /* ── Responsive ────────────────────────────────── */
     @media (max-width: 700px) {
       .grid-4, .grid-2, .grid-2-bottom { grid-template-columns: 1fr; }
@@ -490,33 +574,37 @@
       <!-- ── Lift cards ── -->
       <div id="liftCards" style="display:none;">
         <div class="grid-2">
-          <div class="card card-bench">
+          <div class="card card-bench card-lift-clickable" onclick="openModal('bench')">
             <div class="lift-header">
               <div><div class="lift-title">Bench Press</div><div class="lift-meta" id="benchMeta">—</div></div>
               <span class="tag tag-bench" id="benchTag">—</span>
             </div>
             <table><thead id="benchHead"></thead><tbody id="benchBody"></tbody></table>
+            <div class="expand-hint">Click to expand ↗</div>
           </div>
-          <div class="card card-squat">
+          <div class="card card-squat card-lift-clickable" onclick="openModal('squat')">
             <div class="lift-header">
               <div><div class="lift-title">Squat</div><div class="lift-meta" id="squatMeta">—</div></div>
               <span class="tag tag-squat" id="squatTag">—</span>
             </div>
             <table><thead id="squatHead"></thead><tbody id="squatBody"></tbody></table>
+            <div class="expand-hint">Click to expand ↗</div>
           </div>
-          <div class="card card-deadlift">
+          <div class="card card-deadlift card-lift-clickable" onclick="openModal('deadlift')">
             <div class="lift-header">
               <div><div class="lift-title">Deadlift</div><div class="lift-meta" id="deadliftMeta">—</div></div>
               <span class="tag tag-deadlift" id="deadliftTag">—</span>
             </div>
             <table><thead id="deadliftHead"></thead><tbody id="deadliftBody"></tbody></table>
+            <div class="expand-hint">Click to expand ↗</div>
           </div>
-          <div class="card card-ohp">
+          <div class="card card-ohp card-lift-clickable" onclick="openModal('ohp')">
             <div class="lift-header">
               <div><div class="lift-title">Overhead Press</div><div class="lift-meta" id="ohpMeta">—</div></div>
               <span class="tag tag-ohp" id="ohpTag">—</span>
             </div>
             <table><thead id="ohpHead"></thead><tbody id="ohpBody"></tbody></table>
+            <div class="expand-hint">Click to expand ↗</div>
           </div>
         </div>
       </div>
@@ -566,6 +654,19 @@
         <p style="color:var(--dl-b)">Screen too small for lift tables.<br>Please use a wider device.</p>
       </div>
 
+    </div>
+
+    <!-- ── Lift focus modal ── -->
+    <div class="lift-modal-backdrop" id="liftModalBackdrop" onclick="handleBackdropClick(event)">
+      <div class="lift-modal" id="liftModal">
+        <button class="lift-modal-close" onclick="closeModal()" title="Close">✕</button>
+        <div class="lift-modal-title" id="modalTitle">—</div>
+        <div class="lift-modal-meta"  id="modalMeta">—</div>
+        <table>
+          <thead id="modalHead"></thead>
+          <tbody id="modalBody"></tbody>
+        </table>
+      </div>
     </div>
 
     <footer>
@@ -812,6 +913,108 @@
       if (reps >= 13) note.textContent = 'Estimates above ~12 reps are less reliable. Consider increasing load.';
       else if (reps <= 3) note.textContent = 'Low-rep estimate — good accuracy. Warm up well.';
     }
+
+    /* ─── Lift focus modal ───────────────────────────── */
+    const MODAL_META = {
+      bench:    { title: 'Bench Press',    cls: 'bench',    varPfx: 'bench' },
+      squat:    { title: 'Squat',          cls: 'squat',    varPfx: 'squat' },
+      deadlift: { title: 'Deadlift',       cls: 'deadlift', varPfx: 'dl'    },
+      ohp:      { title: 'Overhead Press', cls: 'ohp',      varPfx: 'ohp'   },
+    };
+
+    const DATA_KEY = {
+      bench: 'benchPress', squat: 'squat', deadlift: 'deadlift', ohp: 'overheadPress',
+    };
+
+    function openModal(liftKey) {
+      if (!data) return;
+      const { title, cls, varPfx } = MODAL_META[liftKey];
+      const max = data[DATA_KEY[liftKey]];
+      const tm  = roundToNearest5(max * 0.9);
+      const { warm, work } = getSetsForWeek(tm, currentWeek);
+      const liftColor = cssVar(`--${varPfx}-b`);
+      const borderColor = cssVar(`--${varPfx}-border`);
+      const thBg = cssVar(`--${varPfx}-th`);
+
+      // Header content
+      document.getElementById('modalTitle').textContent = title;
+      document.getElementById('modalMeta').textContent =
+        `1RM: ${max} lbs · Training Max: ${tm} lbs · ${WEEK_LABELS[currentWeek]}`;
+
+      // Apply lift-colour border-top to modal
+      const modal = document.getElementById('liftModal');
+      modal.style.borderTop = `3px solid ${liftColor}`;
+      modal.style.border = `1px solid ${borderColor}`;
+      modal.style.borderTop = `3px solid ${liftColor}`;
+
+      // Table head
+      const head = document.getElementById('modalHead');
+      head.innerHTML = `<tr>
+        <th style="background:${thBg};color:${liftColor};border-bottom:1px solid ${borderColor};padding:11px 16px;font-size:12px;font-weight:700;text-align:center;letter-spacing:0.1em;text-transform:uppercase;">Set</th>
+        <th style="background:${thBg};color:${liftColor};border-bottom:1px solid ${borderColor};padding:11px 16px;font-size:12px;font-weight:700;text-align:center;letter-spacing:0.1em;text-transform:uppercase;">%TM</th>
+        <th style="background:${thBg};color:${liftColor};border-bottom:1px solid ${borderColor};padding:11px 16px;font-size:12px;font-weight:700;text-align:center;letter-spacing:0.1em;text-transform:uppercase;">Weight</th>
+        <th style="background:${thBg};color:${liftColor};border-bottom:1px solid ${borderColor};padding:11px 16px;font-size:12px;font-weight:700;text-align:center;letter-spacing:0.1em;text-transform:uppercase;">Reps</th>
+        <th style="background:${thBg};color:${liftColor};border-bottom:1px solid ${borderColor};padding:11px 16px;font-size:12px;font-weight:700;text-align:center;letter-spacing:0.1em;text-transform:uppercase;">Plates / Side</th>
+      </tr>`;
+
+      // Table body
+      const tbody = document.getElementById('modalBody');
+      tbody.innerHTML = '';
+
+      warm.forEach((s, i) => {
+        const tr = document.createElement('tr');
+        tr.className = 'warm';
+        tr.innerHTML = `
+          <td>W${i+1}</td>
+          <td>${Math.round(s.pct*100)}%</td>
+          <td class="weight-cell">${s.weight} lbs</td>
+          <td class="reps-cell">${s.reps}</td>
+          <td style="font-size:13px">${plateTooltip(s.weight)}</td>`;
+        tbody.appendChild(tr);
+      });
+
+      work.forEach((s, i) => {
+        const tr = document.createElement('tr');
+        tr.innerHTML = `
+          <td style="color:var(--fg2)">${i+1}</td>
+          <td style="color:var(--gray)">${Math.round(s.pct*100)}%</td>
+          <td class="weight-cell" style="color:var(--fg)">${s.weight} lbs</td>
+          <td class="reps-cell" style="color:${liftColor}">${s.reps}</td>
+          <td style="font-size:13px;color:var(--gray)">${plateTooltip(s.weight)}</td>`;
+        tr.style.cursor = 'pointer';
+        tr.addEventListener('click', () => tr.classList.toggle('highlighted'));
+        tbody.appendChild(tr);
+      });
+
+      // Show
+      const backdrop = document.getElementById('liftModalBackdrop');
+      backdrop.style.display = 'flex';
+      // Trigger animation on next frame
+      requestAnimationFrame(() => backdrop.classList.add('open'));
+      document.body.style.overflow = 'hidden';
+    }
+
+    function closeModal() {
+      const backdrop = document.getElementById('liftModalBackdrop');
+      backdrop.classList.remove('open');
+      // Wait for transition then hide
+      backdrop.addEventListener('transitionend', () => {
+        backdrop.style.display = 'none';
+        document.body.style.overflow = '';
+      }, { once: true });
+    }
+
+    function handleBackdropClick(e) {
+      if (e.target === document.getElementById('liftModalBackdrop')) closeModal();
+    }
+
+    // Escape key closes modal
+    document.addEventListener('keydown', e => {
+      if (e.key === 'Escape') {
+        const backdrop = document.getElementById('liftModalBackdrop');
+        if (backdrop.classList.contains('open')) { e.preventDefault(); closeModal(); }
+      }
+    });
 
     /* ─── Enter keys ─────────────────────────────────── */
     document.addEventListener('keydown', e => {
