@@ -1,16 +1,28 @@
 <!DOCTYPE html>
 <html lang="en" data-theme="gruvbox">
+
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta name="author" content="Jacob Davis">
   <meta property="og:title" content="5-3-1 Lift Generator">
-  <meta property="og:description" content="A website that calculates lift charts based on the 5-3-1 plan by Jim Wendler">
+  <meta property="og:description"
+    content="A website that calculates lift charts based on the 5-3-1 plan by Jim Wendler">
   <title>5-3-1 Lift Generator</title>
-  <link href="https://fonts.googleapis.com/css2?family=Lexend:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Lexend:wght@300;400;500;600;700;800&display=swap"
+    rel="stylesheet">
   <style>
-    *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
-    html { min-height: 100%; }
+    *,
+    *::before,
+    *::after {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    html {
+      min-height: 100%;
+    }
 
     /* ══════════════════════════════════════════════════
        THEME TOKENS
@@ -18,214 +30,302 @@
 
     /* ── 1. Gruvbox Dark (default) ────────────────── */
     [data-theme="gruvbox"] {
-      --bg:            #282828;
-      --bg-noise:      url("data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='200' height='200'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.72' numOctaves='4' stitchTiles='stitch'/><feColorMatrix type='saturate' values='0'/></filter><rect width='200' height='200' filter='url(%23n)' opacity='0.032'/></svg>");
-      --bg-glow1:      radial-gradient(ellipse 55% 50% at  8%  8%,  rgba(69,133,136,0.11)  0%, transparent 65%);
-      --bg-glow2:      radial-gradient(ellipse 55% 50% at 92%  8%,  rgba(215,153,33,0.10)  0%, transparent 65%);
-      --bg-glow3:      radial-gradient(ellipse 55% 50% at  8% 92%,  rgba(204,36,29,0.09)   0%, transparent 65%);
-      --bg-glow4:      radial-gradient(ellipse 55% 50% at 92% 92%,  rgba(104,157,106,0.09) 0%, transparent 65%);
+      --bg: #282828;
+      --bg-noise: url("data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='200' height='200'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.72' numOctaves='4' stitchTiles='stitch'/><feColorMatrix type='saturate' values='0'/></filter><rect width='200' height='200' filter='url(%23n)' opacity='0.032'/></svg>");
+      --bg-glow1: radial-gradient(ellipse 55% 50% at 8% 8%, rgba(69, 133, 136, 0.11) 0%, transparent 65%);
+      --bg-glow2: radial-gradient(ellipse 55% 50% at 92% 8%, rgba(215, 153, 33, 0.10) 0%, transparent 65%);
+      --bg-glow3: radial-gradient(ellipse 55% 50% at 8% 92%, rgba(204, 36, 29, 0.09) 0%, transparent 65%);
+      --bg-glow4: radial-gradient(ellipse 55% 50% at 92% 92%, rgba(104, 157, 106, 0.09) 0%, transparent 65%);
 
-      --fg:            #ebdbb2;
-      --fg1:           #d5c4a1;
-      --fg2:           #bdae93;
-      --gray:          #928374;
-      --card-bg:       rgba(60,56,54,0.42);
-      --card-blur:     blur(24px);
-      --card-shadow:   0 8px 32px rgba(0,0,0,0.4);
-      --card-radius:   16px;
-      --input-bg:      rgba(28,28,28,0.65);
-      --input-color:   #ebdbb2;
-      --border-subtle: rgba(255,255,255,0.07);
-      --row-divider:   rgba(255,255,255,0.04);
-      --highlight-row: rgba(152,151,26,0.25);
-      --logo-slash:    #665c54;
-      --footer-color:  #928374;
+      --fg: #ebdbb2;
+      --fg1: #d5c4a1;
+      --fg2: #bdae93;
+      --gray: #928374;
+      --card-bg: rgba(60, 56, 54, 0.42);
+      --card-blur: blur(24px);
+      --card-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
+      --card-radius: 16px;
+      --input-bg: rgba(28, 28, 28, 0.65);
+      --input-color: #ebdbb2;
+      --border-subtle: rgba(255, 255, 255, 0.07);
+      --row-divider: rgba(255, 255, 255, 0.04);
+      --highlight-row: rgba(152, 151, 26, 0.25);
+      --logo-slash: #665c54;
+      --footer-color: #928374;
 
       /* accent */
-      --accent:        #b16286;
-      --accent-top:    #b16286;
-      --accent-border: rgba(177,98,134,0.22);
-      --accent-label:  #d3869b;
-      --accent-divider:rgba(177,98,134,0.18);
+      --accent: #b16286;
+      --accent-top: #b16286;
+      --accent-border: rgba(177, 98, 134, 0.22);
+      --accent-label: #d3869b;
+      --accent-divider: rgba(177, 98, 134, 0.18);
 
       /* lift colors */
-      --bench-m:   #458588; --bench-b:   #83a598; --bench-bg: rgba(69,133,136,0.10);  --bench-border: rgba(69,133,136,0.28);  --bench-th: rgba(69,133,136,0.18);  --bench-th-bdr: rgba(69,133,136,0.25);
-      --squat-m:   #d79921; --squat-b:   #fabd2f; --squat-bg: rgba(215,153,33,0.10);  --squat-border: rgba(215,153,33,0.28);  --squat-th: rgba(215,153,33,0.18);  --squat-th-bdr: rgba(215,153,33,0.25);
-      --dl-m:      #cc241d; --dl-b:      #fb4934; --dl-bg:    rgba(204,36,29,0.10);   --dl-border:    rgba(204,36,29,0.28);   --dl-th:    rgba(204,36,29,0.18);   --dl-th-bdr:    rgba(204,36,29,0.25);
-      --ohp-m:     #689d6a; --ohp-b:     #8ec07c; --ohp-bg:   rgba(104,157,106,0.10); --ohp-border:   rgba(104,157,106,0.28); --ohp-th:   rgba(104,157,106,0.18); --ohp-th-bdr:   rgba(104,157,106,0.25);
+      --bench-m: #458588;
+      --bench-b: #83a598;
+      --bench-bg: rgba(69, 133, 136, 0.10);
+      --bench-border: rgba(69, 133, 136, 0.28);
+      --bench-th: rgba(69, 133, 136, 0.18);
+      --bench-th-bdr: rgba(69, 133, 136, 0.25);
+      --squat-m: #d79921;
+      --squat-b: #fabd2f;
+      --squat-bg: rgba(215, 153, 33, 0.10);
+      --squat-border: rgba(215, 153, 33, 0.28);
+      --squat-th: rgba(215, 153, 33, 0.18);
+      --squat-th-bdr: rgba(215, 153, 33, 0.25);
+      --dl-m: #cc241d;
+      --dl-b: #fb4934;
+      --dl-bg: rgba(204, 36, 29, 0.10);
+      --dl-border: rgba(204, 36, 29, 0.28);
+      --dl-th: rgba(204, 36, 29, 0.18);
+      --dl-th-bdr: rgba(204, 36, 29, 0.25);
+      --ohp-m: #689d6a;
+      --ohp-b: #8ec07c;
+      --ohp-bg: rgba(104, 157, 106, 0.10);
+      --ohp-border: rgba(104, 157, 106, 0.28);
+      --ohp-th: rgba(104, 157, 106, 0.18);
+      --ohp-th-bdr: rgba(104, 157, 106, 0.25);
 
-      --btn-primary-bg: linear-gradient(135deg,#b16286,#458588);
+      --btn-primary-bg: linear-gradient(135deg, #b16286, #458588);
       --btn-primary-fg: #fff;
-      --btn-ghost-bg:   rgba(177,98,134,0.1);
-      --btn-ghost-fg:   #d3869b;
-      --btn-ghost-bdr:  rgba(177,98,134,0.28);
-      --btn-ghost2-bg:  rgba(255,255,255,0.04);
-      --btn-ghost2-fg:  #bdae93;
-      --btn-ghost2-bdr: rgba(255,255,255,0.1);
+      --btn-ghost-bg: rgba(177, 98, 134, 0.1);
+      --btn-ghost-fg: #d3869b;
+      --btn-ghost-bdr: rgba(177, 98, 134, 0.28);
+      --btn-ghost2-bg: rgba(255, 255, 255, 0.04);
+      --btn-ghost2-fg: #bdae93;
+      --btn-ghost2-bdr: rgba(255, 255, 255, 0.1);
 
-      --week-inactive-bg:  rgba(255,255,255,0.05);
-      --week-inactive-fg:  #928374;
-      --week-inactive-bdr: rgba(255,255,255,0.1);
+      --week-inactive-bg: rgba(255, 255, 255, 0.05);
+      --week-inactive-fg: #928374;
+      --week-inactive-bdr: rgba(255, 255, 255, 0.1);
 
-      --logo1: #83a598; --logo2: #fabd2f; --logo3: #fb4934;
+      --logo1: #83a598;
+      --logo2: #fabd2f;
+      --logo3: #fb4934;
     }
 
     /* ── 2. Claude Light ───────────────────────────── */
     [data-theme="claude"] {
-      --bg:            #f5f0e8;
-      --bg-noise:      url("data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='200' height='200'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.72' numOctaves='4' stitchTiles='stitch'/><feColorMatrix type='saturate' values='0'/></filter><rect width='200' height='200' filter='url(%23n)' opacity='0.025'/></svg>");
-      --bg-glow1:      radial-gradient(ellipse 55% 50% at  8%  8%,  rgba(214,93,14,0.10)  0%, transparent 65%);
-      --bg-glow2:      radial-gradient(ellipse 55% 50% at 92%  8%,  rgba(200,80,30,0.07)  0%, transparent 65%);
-      --bg-glow3:      radial-gradient(ellipse 55% 50% at  8% 92%,  rgba(180,60,10,0.07)  0%, transparent 65%);
-      --bg-glow4:      radial-gradient(ellipse 55% 50% at 92% 92%,  rgba(214,130,50,0.06) 0%, transparent 65%);
+      --bg: #f5f0e8;
+      --bg-noise: url("data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='200' height='200'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.72' numOctaves='4' stitchTiles='stitch'/><feColorMatrix type='saturate' values='0'/></filter><rect width='200' height='200' filter='url(%23n)' opacity='0.025'/></svg>");
+      --bg-glow1: radial-gradient(ellipse 55% 50% at 8% 8%, rgba(214, 93, 14, 0.10) 0%, transparent 65%);
+      --bg-glow2: radial-gradient(ellipse 55% 50% at 92% 8%, rgba(200, 80, 30, 0.07) 0%, transparent 65%);
+      --bg-glow3: radial-gradient(ellipse 55% 50% at 8% 92%, rgba(180, 60, 10, 0.07) 0%, transparent 65%);
+      --bg-glow4: radial-gradient(ellipse 55% 50% at 92% 92%, rgba(214, 130, 50, 0.06) 0%, transparent 65%);
 
-      --fg:            #2d1f0e;
-      --fg1:           #4a3520;
-      --fg2:           #6b5040;
-      --gray:          #9c7a5e;
-      --card-bg:       rgba(255,248,238,0.72);
-      --card-blur:     blur(20px);
-      --card-shadow:   0 4px 24px rgba(120,60,10,0.10);
-      --card-radius:   16px;
-      --input-bg:      rgba(255,250,244,0.9);
-      --input-color:   #2d1f0e;
-      --border-subtle: rgba(180,120,60,0.12);
-      --row-divider:   rgba(180,120,60,0.08);
-      --highlight-row: rgba(214,93,14,0.12);
-      --logo-slash:    #c9a882;
-      --footer-color:  #9c7a5e;
+      --fg: #2d1f0e;
+      --fg1: #4a3520;
+      --fg2: #6b5040;
+      --gray: #9c7a5e;
+      --card-bg: rgba(255, 248, 238, 0.72);
+      --card-blur: blur(20px);
+      --card-shadow: 0 4px 24px rgba(120, 60, 10, 0.10);
+      --card-radius: 16px;
+      --input-bg: rgba(255, 250, 244, 0.9);
+      --input-color: #2d1f0e;
+      --border-subtle: rgba(180, 120, 60, 0.12);
+      --row-divider: rgba(180, 120, 60, 0.08);
+      --highlight-row: rgba(214, 93, 14, 0.12);
+      --logo-slash: #c9a882;
+      --footer-color: #9c7a5e;
 
-      --accent:        #d65d0e;
-      --accent-top:    #d65d0e;
-      --accent-border: rgba(214,93,14,0.22);
-      --accent-label:  #d65d0e;
-      --accent-divider:rgba(214,93,14,0.15);
+      --accent: #d65d0e;
+      --accent-top: #d65d0e;
+      --accent-border: rgba(214, 93, 14, 0.22);
+      --accent-label: #d65d0e;
+      --accent-divider: rgba(214, 93, 14, 0.15);
 
-      --bench-m:   #b85c00; --bench-b:   #d4720a; --bench-bg: rgba(184,92,0,0.07);   --bench-border: rgba(184,92,0,0.22);   --bench-th: rgba(184,92,0,0.10);   --bench-th-bdr: rgba(184,92,0,0.18);
-      --squat-m:   #a04800; --squat-b:   #c45a00; --squat-bg: rgba(160,72,0,0.07);   --squat-border: rgba(160,72,0,0.22);   --squat-th: rgba(160,72,0,0.10);   --squat-th-bdr: rgba(160,72,0,0.18);
-      --dl-m:      #8b1a00; --dl-b:      #b02200; --dl-bg:    rgba(139,26,0,0.07);   --dl-border:    rgba(139,26,0,0.22);   --dl-th:    rgba(139,26,0,0.10);   --dl-th-bdr:    rgba(139,26,0,0.18);
-      --ohp-m:     #7a5c1e; --ohp-b:     #9c7428; --ohp-bg:   rgba(122,92,30,0.07);  --ohp-border:   rgba(122,92,30,0.22);  --ohp-th:   rgba(122,92,30,0.10);  --ohp-th-bdr:   rgba(122,92,30,0.18);
+      --bench-m: #b85c00;
+      --bench-b: #d4720a;
+      --bench-bg: rgba(184, 92, 0, 0.07);
+      --bench-border: rgba(184, 92, 0, 0.22);
+      --bench-th: rgba(184, 92, 0, 0.10);
+      --bench-th-bdr: rgba(184, 92, 0, 0.18);
+      --squat-m: #a04800;
+      --squat-b: #c45a00;
+      --squat-bg: rgba(160, 72, 0, 0.07);
+      --squat-border: rgba(160, 72, 0, 0.22);
+      --squat-th: rgba(160, 72, 0, 0.10);
+      --squat-th-bdr: rgba(160, 72, 0, 0.18);
+      --dl-m: #8b1a00;
+      --dl-b: #b02200;
+      --dl-bg: rgba(139, 26, 0, 0.07);
+      --dl-border: rgba(139, 26, 0, 0.22);
+      --dl-th: rgba(139, 26, 0, 0.10);
+      --dl-th-bdr: rgba(139, 26, 0, 0.18);
+      --ohp-m: #7a5c1e;
+      --ohp-b: #9c7428;
+      --ohp-bg: rgba(122, 92, 30, 0.07);
+      --ohp-border: rgba(122, 92, 30, 0.22);
+      --ohp-th: rgba(122, 92, 30, 0.10);
+      --ohp-th-bdr: rgba(122, 92, 30, 0.18);
 
-      --btn-primary-bg: linear-gradient(135deg,#d65d0e,#a04000);
+      --btn-primary-bg: linear-gradient(135deg, #d65d0e, #a04000);
       --btn-primary-fg: #fff;
-      --btn-ghost-bg:   rgba(214,93,14,0.08);
-      --btn-ghost-fg:   #d65d0e;
-      --btn-ghost-bdr:  rgba(214,93,14,0.28);
-      --btn-ghost2-bg:  rgba(180,120,60,0.06);
-      --btn-ghost2-fg:  #6b5040;
-      --btn-ghost2-bdr: rgba(180,120,60,0.18);
+      --btn-ghost-bg: rgba(214, 93, 14, 0.08);
+      --btn-ghost-fg: #d65d0e;
+      --btn-ghost-bdr: rgba(214, 93, 14, 0.28);
+      --btn-ghost2-bg: rgba(180, 120, 60, 0.06);
+      --btn-ghost2-fg: #6b5040;
+      --btn-ghost2-bdr: rgba(180, 120, 60, 0.18);
 
-      --week-inactive-bg:  rgba(180,120,60,0.06);
-      --week-inactive-fg:  #9c7a5e;
-      --week-inactive-bdr: rgba(180,120,60,0.15);
+      --week-inactive-bg: rgba(180, 120, 60, 0.06);
+      --week-inactive-fg: #9c7a5e;
+      --week-inactive-bdr: rgba(180, 120, 60, 0.15);
 
-      --logo1: #d65d0e; --logo2: #a04000; --logo3: #8b1a00;
+      --logo1: #d65d0e;
+      --logo2: #a04000;
+      --logo3: #8b1a00;
     }
 
     /* ── 3. GitHub Dark ────────────────────────────── */
     /* ── 3. Apprentice ───────────────────────────────── */
     [data-theme="apprentice"] {
-      --bg:            #262626;
-      --bg-noise:      url("data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='200' height='200'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.72' numOctaves='4' stitchTiles='stitch'/><feColorMatrix type='saturate' values='0'/></filter><rect width='200' height='200' filter='url(%23n)' opacity='0.030'/></svg>");
-      --bg-glow1:      radial-gradient(ellipse 55% 50% at  8%  8%,  rgba(95,135,175,0.10)  0%, transparent 65%);
-      --bg-glow2:      radial-gradient(ellipse 55% 50% at 92%  8%,  rgba(135,135,95,0.09)  0%, transparent 65%);
-      --bg-glow3:      radial-gradient(ellipse 55% 50% at  8% 92%,  rgba(175,95,95,0.08)   0%, transparent 65%);
-      --bg-glow4:      radial-gradient(ellipse 55% 50% at 92% 92%,  rgba(95,135,95,0.08)   0%, transparent 65%);
+      --bg: #262626;
+      --bg-noise: url("data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='200' height='200'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.72' numOctaves='4' stitchTiles='stitch'/><feColorMatrix type='saturate' values='0'/></filter><rect width='200' height='200' filter='url(%23n)' opacity='0.030'/></svg>");
+      --bg-glow1: radial-gradient(ellipse 55% 50% at 8% 8%, rgba(95, 135, 175, 0.10) 0%, transparent 65%);
+      --bg-glow2: radial-gradient(ellipse 55% 50% at 92% 8%, rgba(135, 135, 95, 0.09) 0%, transparent 65%);
+      --bg-glow3: radial-gradient(ellipse 55% 50% at 8% 92%, rgba(175, 95, 95, 0.08) 0%, transparent 65%);
+      --bg-glow4: radial-gradient(ellipse 55% 50% at 92% 92%, rgba(95, 135, 95, 0.08) 0%, transparent 65%);
 
-      --fg:            #bcbcbc;
-      --fg1:           #a8a8a8;
-      --fg2:           #8a8a8a;
-      --gray:          #6c6c6c;
-      --card-bg:       rgba(68,68,68,0.38);
-      --card-blur:     blur(24px);
-      --card-shadow:   0 8px 32px rgba(0,0,0,0.45);
-      --card-radius:   16px;
-      --input-bg:      rgba(28,28,28,0.65);
-      --input-color:   #bcbcbc;
-      --border-subtle: rgba(255,255,255,0.07);
-      --row-divider:   rgba(255,255,255,0.04);
-      --highlight-row: rgba(135,135,95,0.22);
-      --logo-slash:    #444444;
-      --footer-color:  #6c6c6c;
+      --fg: #bcbcbc;
+      --fg1: #a8a8a8;
+      --fg2: #8a8a8a;
+      --gray: #6c6c6c;
+      --card-bg: rgba(68, 68, 68, 0.38);
+      --card-blur: blur(24px);
+      --card-shadow: 0 8px 32px rgba(0, 0, 0, 0.45);
+      --card-radius: 16px;
+      --input-bg: rgba(28, 28, 28, 0.65);
+      --input-color: #bcbcbc;
+      --border-subtle: rgba(255, 255, 255, 0.07);
+      --row-divider: rgba(255, 255, 255, 0.04);
+      --highlight-row: rgba(135, 135, 95, 0.22);
+      --logo-slash: #444444;
+      --footer-color: #6c6c6c;
 
       /* accent — cyan */
-      --accent:        #5fafaf;
-      --accent-top:    #5fafaf;
-      --accent-border: rgba(95,175,175,0.22);
-      --accent-label:  #5fafaf;
-      --accent-divider:rgba(95,175,175,0.18);
+      --accent: #5fafaf;
+      --accent-top: #5fafaf;
+      --accent-border: rgba(95, 175, 175, 0.22);
+      --accent-label: #5fafaf;
+      --accent-divider: rgba(95, 175, 175, 0.18);
 
       /* lift colors */
-      --bench-m:   #5f87af; --bench-b:   #8fafd7; --bench-bg: rgba(95,135,175,0.10);  --bench-border: rgba(95,135,175,0.28);  --bench-th: rgba(95,135,175,0.18);  --bench-th-bdr: rgba(95,135,175,0.25);
-      --squat-m:   #87875f; --squat-b:   #ffffaf; --squat-bg: rgba(135,135,95,0.10);  --squat-border: rgba(135,135,95,0.28);  --squat-th: rgba(135,135,95,0.18);  --squat-th-bdr: rgba(135,135,95,0.25);
-      --dl-m:      #af5f5f; --dl-b:      #ff8700; --dl-bg:    rgba(175,95,95,0.10);   --dl-border:    rgba(175,95,95,0.28);   --dl-th:    rgba(175,95,95,0.18);   --dl-th-bdr:    rgba(175,95,95,0.25);
-      --ohp-m:     #5f875f; --ohp-b:     #87af87; --ohp-bg:   rgba(95,135,95,0.10);   --ohp-border:   rgba(95,135,95,0.28);   --ohp-th:   rgba(95,135,95,0.18);   --ohp-th-bdr:   rgba(95,135,95,0.25);
+      --bench-m: #5f87af;
+      --bench-b: #8fafd7;
+      --bench-bg: rgba(95, 135, 175, 0.10);
+      --bench-border: rgba(95, 135, 175, 0.28);
+      --bench-th: rgba(95, 135, 175, 0.18);
+      --bench-th-bdr: rgba(95, 135, 175, 0.25);
+      --squat-m: #87875f;
+      --squat-b: #ffffaf;
+      --squat-bg: rgba(135, 135, 95, 0.10);
+      --squat-border: rgba(135, 135, 95, 0.28);
+      --squat-th: rgba(135, 135, 95, 0.18);
+      --squat-th-bdr: rgba(135, 135, 95, 0.25);
+      --dl-m: #af5f5f;
+      --dl-b: #ff8700;
+      --dl-bg: rgba(175, 95, 95, 0.10);
+      --dl-border: rgba(175, 95, 95, 0.28);
+      --dl-th: rgba(175, 95, 95, 0.18);
+      --dl-th-bdr: rgba(175, 95, 95, 0.25);
+      --ohp-m: #5f875f;
+      --ohp-b: #87af87;
+      --ohp-bg: rgba(95, 135, 95, 0.10);
+      --ohp-border: rgba(95, 135, 95, 0.28);
+      --ohp-th: rgba(95, 135, 95, 0.18);
+      --ohp-th-bdr: rgba(95, 135, 95, 0.25);
 
-      --btn-primary-bg: linear-gradient(135deg,#5f87af,#5f8787);
+      --btn-primary-bg: linear-gradient(135deg, #5f87af, #5f8787);
       --btn-primary-fg: #fff;
-      --btn-ghost-bg:   rgba(95,175,175,0.10);
-      --btn-ghost-fg:   #5fafaf;
-      --btn-ghost-bdr:  rgba(95,175,175,0.28);
-      --btn-ghost2-bg:  rgba(255,255,255,0.04);
-      --btn-ghost2-fg:  #8a8a8a;
-      --btn-ghost2-bdr: rgba(255,255,255,0.10);
+      --btn-ghost-bg: rgba(95, 175, 175, 0.10);
+      --btn-ghost-fg: #5fafaf;
+      --btn-ghost-bdr: rgba(95, 175, 175, 0.28);
+      --btn-ghost2-bg: rgba(255, 255, 255, 0.04);
+      --btn-ghost2-fg: #8a8a8a;
+      --btn-ghost2-bdr: rgba(255, 255, 255, 0.10);
 
-      --week-inactive-bg:  rgba(255,255,255,0.05);
-      --week-inactive-fg:  #6c6c6c;
-      --week-inactive-bdr: rgba(255,255,255,0.10);
+      --week-inactive-bg: rgba(255, 255, 255, 0.05);
+      --week-inactive-fg: #6c6c6c;
+      --week-inactive-bdr: rgba(255, 255, 255, 0.10);
 
-      --logo1: #8fafd7; --logo2: #ffffaf; --logo3: #ff8700;
+      --logo1: #8fafd7;
+      --logo2: #ffffaf;
+      --logo3: #ff8700;
     }
 
     [data-theme="github"] {
-      --bg:            #0d1117;
-      --bg-noise:      url("data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='200' height='200'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.72' numOctaves='4' stitchTiles='stitch'/><feColorMatrix type='saturate' values='0'/></filter><rect width='200' height='200' filter='url(%23n)' opacity='0.022'/></svg>");
-      --bg-glow1:      radial-gradient(ellipse 55% 50% at  8%  8%,  rgba(56,139,253,0.09)  0%, transparent 65%);
-      --bg-glow2:      radial-gradient(ellipse 55% 50% at 92%  8%,  rgba(63,185,80,0.07)   0%, transparent 65%);
-      --bg-glow3:      radial-gradient(ellipse 55% 50% at  8% 92%,  rgba(188,140,255,0.07) 0%, transparent 65%);
-      --bg-glow4:      radial-gradient(ellipse 55% 50% at 92% 92%,  rgba(56,139,253,0.06)  0%, transparent 65%);
+      --bg: #0d1117;
+      --bg-noise: url("data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='200' height='200'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.72' numOctaves='4' stitchTiles='stitch'/><feColorMatrix type='saturate' values='0'/></filter><rect width='200' height='200' filter='url(%23n)' opacity='0.022'/></svg>");
+      --bg-glow1: radial-gradient(ellipse 55% 50% at 8% 8%, rgba(56, 139, 253, 0.09) 0%, transparent 65%);
+      --bg-glow2: radial-gradient(ellipse 55% 50% at 92% 8%, rgba(63, 185, 80, 0.07) 0%, transparent 65%);
+      --bg-glow3: radial-gradient(ellipse 55% 50% at 8% 92%, rgba(188, 140, 255, 0.07) 0%, transparent 65%);
+      --bg-glow4: radial-gradient(ellipse 55% 50% at 92% 92%, rgba(56, 139, 253, 0.06) 0%, transparent 65%);
 
-      --fg:            #e6edf3;
-      --fg1:           #c9d1d9;
-      --fg2:           #8b949e;
-      --gray:          #6e7681;
-      --card-bg:       rgba(22,27,34,0.80);
-      --card-blur:     blur(20px);
-      --card-shadow:   0 8px 32px rgba(0,0,0,0.55);
-      --card-radius:   12px;
-      --input-bg:      rgba(13,17,23,0.8);
-      --input-color:   #e6edf3;
-      --border-subtle: rgba(48,54,61,0.8);
-      --row-divider:   rgba(48,54,61,0.6);
-      --highlight-row: rgba(63,185,80,0.15);
-      --logo-slash:    #30363d;
-      --footer-color:  #6e7681;
+      --fg: #e6edf3;
+      --fg1: #c9d1d9;
+      --fg2: #8b949e;
+      --gray: #6e7681;
+      --card-bg: rgba(22, 27, 34, 0.80);
+      --card-blur: blur(20px);
+      --card-shadow: 0 8px 32px rgba(0, 0, 0, 0.55);
+      --card-radius: 12px;
+      --input-bg: rgba(13, 17, 23, 0.8);
+      --input-color: #e6edf3;
+      --border-subtle: rgba(48, 54, 61, 0.8);
+      --row-divider: rgba(48, 54, 61, 0.6);
+      --highlight-row: rgba(63, 185, 80, 0.15);
+      --logo-slash: #30363d;
+      --footer-color: #6e7681;
 
-      --accent:        #388bfd;
-      --accent-top:    #388bfd;
-      --accent-border: rgba(56,139,253,0.22);
-      --accent-label:  #79c0ff;
-      --accent-divider:rgba(56,139,253,0.15);
+      --accent: #388bfd;
+      --accent-top: #388bfd;
+      --accent-border: rgba(56, 139, 253, 0.22);
+      --accent-label: #79c0ff;
+      --accent-divider: rgba(56, 139, 253, 0.15);
 
-      --bench-m:   #388bfd; --bench-b:   #79c0ff; --bench-bg: rgba(56,139,253,0.08);  --bench-border: rgba(56,139,253,0.25);  --bench-th: rgba(56,139,253,0.14);  --bench-th-bdr: rgba(56,139,253,0.22);
-      --squat-m:   #3fb950; --squat-b:   #56d364; --squat-bg: rgba(63,185,80,0.08);   --squat-border: rgba(63,185,80,0.25);   --squat-th: rgba(63,185,80,0.14);   --squat-th-bdr: rgba(63,185,80,0.22);
-      --dl-m:      #f85149; --dl-b:      #ff7b72; --dl-bg:    rgba(248,81,73,0.08);   --dl-border:    rgba(248,81,73,0.25);   --dl-th:    rgba(248,81,73,0.14);   --dl-th-bdr:    rgba(248,81,73,0.22);
-      --ohp-m:     #bc8cff; --ohp-b:     #d2a8ff; --ohp-bg:   rgba(188,140,255,0.08); --ohp-border:   rgba(188,140,255,0.25); --ohp-th:   rgba(188,140,255,0.14); --ohp-th-bdr:   rgba(188,140,255,0.22);
+      --bench-m: #388bfd;
+      --bench-b: #79c0ff;
+      --bench-bg: rgba(56, 139, 253, 0.08);
+      --bench-border: rgba(56, 139, 253, 0.25);
+      --bench-th: rgba(56, 139, 253, 0.14);
+      --bench-th-bdr: rgba(56, 139, 253, 0.22);
+      --squat-m: #3fb950;
+      --squat-b: #56d364;
+      --squat-bg: rgba(63, 185, 80, 0.08);
+      --squat-border: rgba(63, 185, 80, 0.25);
+      --squat-th: rgba(63, 185, 80, 0.14);
+      --squat-th-bdr: rgba(63, 185, 80, 0.22);
+      --dl-m: #f85149;
+      --dl-b: #ff7b72;
+      --dl-bg: rgba(248, 81, 73, 0.08);
+      --dl-border: rgba(248, 81, 73, 0.25);
+      --dl-th: rgba(248, 81, 73, 0.14);
+      --dl-th-bdr: rgba(248, 81, 73, 0.22);
+      --ohp-m: #bc8cff;
+      --ohp-b: #d2a8ff;
+      --ohp-bg: rgba(188, 140, 255, 0.08);
+      --ohp-border: rgba(188, 140, 255, 0.25);
+      --ohp-th: rgba(188, 140, 255, 0.14);
+      --ohp-th-bdr: rgba(188, 140, 255, 0.22);
 
-      --btn-primary-bg: linear-gradient(135deg,#238636,#1f6feb);
+      --btn-primary-bg: linear-gradient(135deg, #238636, #1f6feb);
       --btn-primary-fg: #fff;
-      --btn-ghost-bg:   rgba(56,139,253,0.08);
-      --btn-ghost-fg:   #79c0ff;
-      --btn-ghost-bdr:  rgba(56,139,253,0.28);
-      --btn-ghost2-bg:  rgba(255,255,255,0.04);
-      --btn-ghost2-fg:  #8b949e;
-      --btn-ghost2-bdr: rgba(48,54,61,0.8);
+      --btn-ghost-bg: rgba(56, 139, 253, 0.08);
+      --btn-ghost-fg: #79c0ff;
+      --btn-ghost-bdr: rgba(56, 139, 253, 0.28);
+      --btn-ghost2-bg: rgba(255, 255, 255, 0.04);
+      --btn-ghost2-fg: #8b949e;
+      --btn-ghost2-bdr: rgba(48, 54, 61, 0.8);
 
-      --week-inactive-bg:  rgba(48,54,61,0.5);
-      --week-inactive-fg:  #6e7681;
-      --week-inactive-bdr: rgba(48,54,61,0.8);
+      --week-inactive-bg: rgba(48, 54, 61, 0.5);
+      --week-inactive-fg: #6e7681;
+      --week-inactive-bdr: rgba(48, 54, 61, 0.8);
 
-      --logo1: #79c0ff; --logo2: #56d364; --logo3: #ff7b72;
+      --logo1: #79c0ff;
+      --logo2: #56d364;
+      --logo3: #ff7b72;
     }
 
     /* ══════════════════════════════════════════════════
@@ -242,8 +342,15 @@
       transition: background-color 0.35s, color 0.35s;
     }
 
-    .label-xs  { font-size: 11px; letter-spacing: 0.05em; color: var(--fg2); }
-    .text-gray { color: var(--gray); }
+    .label-xs {
+      font-size: 11px;
+      letter-spacing: 0.05em;
+      color: var(--fg2);
+    }
+
+    .text-gray {
+      color: var(--gray);
+    }
 
     /* ── Cards ─────────────────────────────────────── */
     .card {
@@ -255,16 +362,47 @@
       padding: 26px;
       transition: background 0.35s, border-color 0.35s;
     }
+
     .card-accent {
       border: 1px solid var(--accent-border);
       border-top: 3px solid var(--accent-top);
     }
-    .card-bench    { border: 1px solid var(--bench-border);  border-top: 3px solid var(--bench-m);  background: var(--bench-bg); }
-    .card-squat    { border: 1px solid var(--squat-border);  border-top: 3px solid var(--squat-m);  background: var(--squat-bg); }
-    .card-deadlift { border: 1px solid var(--dl-border);     border-top: 3px solid var(--dl-m);     background: var(--dl-bg);    }
-    .card-ohp      { border: 1px solid var(--ohp-border);    border-top: 3px solid var(--ohp-m);    background: var(--ohp-bg);   }
-    .card-teal     { border: 1px solid var(--ohp-border);    border-top: 3px solid var(--ohp-m);    background: var(--ohp-bg);   }
-    .card-blue     { border: 1px solid var(--bench-border);  border-top: 3px solid var(--bench-m);  background: var(--bench-bg); }
+
+    .card-bench {
+      border: 1px solid var(--bench-border);
+      border-top: 3px solid var(--bench-m);
+      background: var(--bench-bg);
+    }
+
+    .card-squat {
+      border: 1px solid var(--squat-border);
+      border-top: 3px solid var(--squat-m);
+      background: var(--squat-bg);
+    }
+
+    .card-deadlift {
+      border: 1px solid var(--dl-border);
+      border-top: 3px solid var(--dl-m);
+      background: var(--dl-bg);
+    }
+
+    .card-ohp {
+      border: 1px solid var(--ohp-border);
+      border-top: 3px solid var(--ohp-m);
+      background: var(--ohp-bg);
+    }
+
+    .card-teal {
+      border: 1px solid var(--ohp-border);
+      border-top: 3px solid var(--ohp-m);
+      background: var(--ohp-bg);
+    }
+
+    .card-blue {
+      border: 1px solid var(--bench-border);
+      border-top: 3px solid var(--bench-m);
+      background: var(--bench-bg);
+    }
 
     /* ── Inputs ────────────────────────────────────── */
     input[type=number] {
@@ -278,175 +416,522 @@
       width: 100%;
       transition: border-color 0.2s, background 0.35s;
     }
-    input[type=number]:focus { outline: none; border-color: var(--accent); }
-    input[type=number]::-webkit-inner-spin-button,
-    input[type=number]::-webkit-outer-spin-button { -webkit-appearance: none; }
-    input[type=number] { -moz-appearance: textfield; }
 
-    .inp-bench    { border-color: var(--bench-border) !important; }
-    .inp-bench:focus    { border-color: var(--bench-b) !important; }
-    .inp-squat    { border-color: var(--squat-border) !important; }
-    .inp-squat:focus    { border-color: var(--squat-b) !important; }
-    .inp-deadlift { border-color: var(--dl-border) !important; }
-    .inp-deadlift:focus { border-color: var(--dl-b) !important; }
-    .inp-ohp      { border-color: var(--ohp-border) !important; }
-    .inp-ohp:focus      { border-color: var(--ohp-b) !important; }
+    input[type=number]:focus {
+      outline: none;
+      border-color: var(--accent);
+    }
+
+    input[type=number]::-webkit-inner-spin-button,
+    input[type=number]::-webkit-outer-spin-button {
+      -webkit-appearance: none;
+    }
+
+    input[type=number] {
+      -moz-appearance: textfield;
+    }
+
+    .inp-bench {
+      border-color: var(--bench-border) !important;
+    }
+
+    .inp-bench:focus {
+      border-color: var(--bench-b) !important;
+    }
+
+    .inp-squat {
+      border-color: var(--squat-border) !important;
+    }
+
+    .inp-squat:focus {
+      border-color: var(--squat-b) !important;
+    }
+
+    .inp-deadlift {
+      border-color: var(--dl-border) !important;
+    }
+
+    .inp-deadlift:focus {
+      border-color: var(--dl-b) !important;
+    }
+
+    .inp-ohp {
+      border-color: var(--ohp-border) !important;
+    }
+
+    .inp-ohp:focus {
+      border-color: var(--ohp-b) !important;
+    }
 
     /* ── Buttons ───────────────────────────────────── */
     .btn {
-      display: inline-flex; align-items: center; gap: 6px;
-      border: none; border-radius: 10px;
-      padding: 12px 22px; font-family: 'Lexend', sans-serif;
-      font-size: 14px; font-weight: 600; cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      border: none;
+      border-radius: 10px;
+      padding: 12px 22px;
+      font-family: 'Lexend', sans-serif;
+      font-size: 14px;
+      font-weight: 600;
+      cursor: pointer;
       transition: opacity 0.15s, transform 0.1s;
       white-space: nowrap;
     }
-    .btn:hover  { opacity: 0.86; transform: translateY(-1px); }
-    .btn:active { transform: translateY(0); }
-    .btn-primary { background: var(--btn-primary-bg); color: var(--btn-primary-fg); }
-    .btn-ghost   { background: var(--btn-ghost-bg);   color: var(--btn-ghost-fg);   border: 1px solid var(--btn-ghost-bdr); }
-    .btn-ghost2  { background: var(--btn-ghost2-bg);  color: var(--btn-ghost2-fg);  border: 1px solid var(--btn-ghost2-bdr); }
-    .btn-lift    { border-radius: 8px; padding: 10px 18px; font-size: 13px; }
+
+    .btn:hover {
+      opacity: 0.86;
+      transform: translateY(-1px);
+    }
+
+    .btn:active {
+      transform: translateY(0);
+    }
+
+    .btn-primary {
+      background: var(--btn-primary-bg);
+      color: var(--btn-primary-fg);
+    }
+
+    .btn-ghost {
+      background: var(--btn-ghost-bg);
+      color: var(--btn-ghost-fg);
+      border: 1px solid var(--btn-ghost-bdr);
+    }
+
+    .btn-ghost2 {
+      background: var(--btn-ghost2-bg);
+      color: var(--btn-ghost2-fg);
+      border: 1px solid var(--btn-ghost2-bdr);
+    }
+
+    .btn-lift {
+      border-radius: 8px;
+      padding: 10px 18px;
+      font-size: 13px;
+    }
 
     /* ── Week tabs ─────────────────────────────────── */
-    .week-tabs { display: flex; gap: 6px; flex-wrap: wrap; }
+    .week-tabs {
+      display: flex;
+      justify-content: center;
+      gap: 6px;
+      flex-wrap: wrap;
+    }
+
     .week-tab {
       background: var(--week-inactive-bg);
       color: var(--week-inactive-fg);
       border: 1px solid var(--week-inactive-bdr);
-      border-radius: 8px; padding: 7px 16px;
-      font-family: 'Lexend', sans-serif; font-size: 12px; font-weight: 600;
-      cursor: pointer; transition: background 0.15s, color 0.15s, border-color 0.15s;
+      border-radius: 8px;
+      padding: 7px 16px;
+      font-family: 'Lexend', sans-serif;
+      font-size: 12px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: background 0.15s, color 0.15s, border-color 0.15s;
     }
-    .week-tab.active-1 { background: var(--bench-bg); color: var(--bench-b); border-color: var(--bench-border); }
-    .week-tab.active-2 { background: var(--squat-bg); color: var(--squat-b); border-color: var(--squat-border); }
-    .week-tab.active-3 { background: var(--dl-bg);    color: var(--dl-b);    border-color: var(--dl-border);    }
-    .week-tab.active-4 { background: var(--ohp-bg);   color: var(--ohp-b);   border-color: var(--ohp-border);   }
-    .week-tab.active-5 { background: var(--ohp-bg);   color: var(--ohp-b);   border-color: var(--ohp-border);   }
+
+    .week-tab.active-1 {
+      background: var(--bench-bg);
+      color: var(--bench-b);
+      border-color: var(--bench-border);
+    }
+
+    .week-tab.active-2 {
+      background: var(--squat-bg);
+      color: var(--squat-b);
+      border-color: var(--squat-border);
+    }
+
+    .week-tab.active-3 {
+      background: var(--dl-bg);
+      color: var(--dl-b);
+      border-color: var(--dl-border);
+    }
+
+    .week-tab.active-4 {
+      background: var(--ohp-bg);
+      color: var(--ohp-b);
+      border-color: var(--ohp-border);
+    }
+
+    .week-tab.active-5 {
+      background: var(--ohp-bg);
+      color: var(--ohp-b);
+      border-color: var(--ohp-border);
+    }
 
     /* ── Layout ────────────────────────────────────── */
-    .container    { max-width: 1120px; margin: 0 auto; }
-    .grid-4       { display: grid; grid-template-columns: repeat(4,1fr); gap: 14px; }
-    .grid-2       { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
-    .grid-2-bottom{ display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
-    .stack        { display: flex; flex-direction: column; gap: 18px; }
-    .row          { display: flex; align-items: center; gap: 12px; }
-    .mb-18        { margin-bottom: 18px; }
-    .mb-14        { margin-bottom: 14px; }
+    .container {
+      max-width: 1120px;
+      margin: 0 auto;
+    }
+
+    .grid-4 {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 14px;
+    }
+
+    .grid-2 {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 16px;
+    }
+
+    .grid-2-bottom {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 14px;
+    }
+
+    .stack {
+      display: flex;
+      flex-direction: column;
+      gap: 18px;
+    }
+
+    .row {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .mb-18 {
+      margin-bottom: 18px;
+    }
+
+    .mb-14 {
+      margin-bottom: 14px;
+    }
 
     /* ── Tables ────────────────────────────────────── */
-    table { width: 100%; border-collapse: collapse; }
-    thead th {
-      padding: 9px 12px; font-size: 11px; font-weight: 700;
-      text-align: center; letter-spacing: 0.1em; text-transform: uppercase;
+    table {
+      width: 100%;
+      border-collapse: collapse;
     }
+
+    thead th {
+      padding: 9px 12px;
+      font-size: 11px;
+      font-weight: 700;
+      text-align: center;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+    }
+
     tbody td {
-      padding: 8px 12px; font-size: 13px; text-align: center;
+      padding: 8px 12px;
+      font-size: 13px;
+      text-align: center;
       border-bottom: 1px solid var(--row-divider);
       transition: background 0.15s;
     }
-    tbody tr:last-child td { border-bottom: none; }
-    tbody tr.warm td { color: var(--gray); }
-    tbody td.weight-cell { font-size: 14px; font-weight: 600; }
-    tbody td.reps-cell   { font-size: 14px; font-weight: 700; }
-    tbody tr.highlighted td { background: var(--highlight-row) !important; }
 
-    .th-bench    { background: var(--bench-th); color: var(--bench-b); border-bottom: 1px solid var(--bench-th-bdr); }
-    .th-squat    { background: var(--squat-th); color: var(--squat-b); border-bottom: 1px solid var(--squat-th-bdr); }
-    .th-deadlift { background: var(--dl-th);    color: var(--dl-b);    border-bottom: 1px solid var(--dl-th-bdr);    }
-    .th-ohp      { background: var(--ohp-th);   color: var(--ohp-b);   border-bottom: 1px solid var(--ohp-th-bdr);   }
+    tbody tr:last-child td {
+      border-bottom: none;
+    }
+
+    tbody tr.warm td {
+      color: var(--gray);
+    }
+
+    tbody td.weight-cell {
+      font-size: 14px;
+      font-weight: 600;
+    }
+
+    tbody td.reps-cell {
+      font-size: 14px;
+      font-weight: 700;
+    }
+
+    tbody tr.highlighted td {
+      background: var(--highlight-row) !important;
+    }
+
+    .th-bench {
+      background: var(--bench-th);
+      color: var(--bench-b);
+      border-bottom: 1px solid var(--bench-th-bdr);
+    }
+
+    .th-squat {
+      background: var(--squat-th);
+      color: var(--squat-b);
+      border-bottom: 1px solid var(--squat-th-bdr);
+    }
+
+    .th-deadlift {
+      background: var(--dl-th);
+      color: var(--dl-b);
+      border-bottom: 1px solid var(--dl-th-bdr);
+    }
+
+    .th-ohp {
+      background: var(--ohp-th);
+      color: var(--ohp-b);
+      border-bottom: 1px solid var(--ohp-th-bdr);
+    }
 
     /* ── Tag pills ─────────────────────────────────── */
-    .tag { display: inline-block; font-size: 11px; font-weight: 700; letter-spacing: 0.06em; border-radius: 20px; padding: 4px 10px; }
-    .tag-bench    { background: var(--bench-th);  color: var(--bench-b); border: 1px solid var(--bench-border); }
-    .tag-squat    { background: var(--squat-th);  color: var(--squat-b); border: 1px solid var(--squat-border); }
-    .tag-deadlift { background: var(--dl-th);     color: var(--dl-b);    border: 1px solid var(--dl-border);    }
-    .tag-ohp      { background: var(--ohp-th);    color: var(--ohp-b);   border: 1px solid var(--ohp-border);   }
+    .tag {
+      display: inline-block;
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 0.06em;
+      border-radius: 20px;
+      padding: 4px 10px;
+    }
+
+    .tag-bench {
+      background: var(--bench-th);
+      color: var(--bench-b);
+      border: 1px solid var(--bench-border);
+    }
+
+    .tag-squat {
+      background: var(--squat-th);
+      color: var(--squat-b);
+      border: 1px solid var(--squat-border);
+    }
+
+    .tag-deadlift {
+      background: var(--dl-th);
+      color: var(--dl-b);
+      border: 1px solid var(--dl-border);
+    }
+
+    .tag-ohp {
+      background: var(--ohp-th);
+      color: var(--ohp-b);
+      border: 1px solid var(--ohp-border);
+    }
 
     /* ── Header ────────────────────────────────────── */
-    header { text-align: center; margin-bottom: 36px; }
-    .logo  { display: inline-flex; align-items: baseline; gap: 2px; margin-bottom: 6px; }
-    .logo-digit { font-size: 48px; font-weight: 800; letter-spacing: -0.04em; line-height: 1; }
-    .logo-slash { font-size: 30px; font-weight: 800; color: var(--logo-slash); }
-    .logo-sub   { font-size: 12px; letter-spacing: 0.14em; text-transform: uppercase; color: var(--fg2); }
+    header {
+      text-align: center;
+      margin-bottom: 36px;
+    }
+
+    .logo {
+      display: inline-flex;
+      align-items: baseline;
+      gap: 2px;
+      margin-bottom: 6px;
+    }
+
+    .logo-digit {
+      font-size: 48px;
+      font-weight: 800;
+      letter-spacing: -0.04em;
+      line-height: 1;
+    }
+
+    .logo-slash {
+      font-size: 30px;
+      font-weight: 800;
+      color: var(--logo-slash);
+    }
+
+    .logo-sub {
+      font-size: 12px;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      color: var(--fg2);
+    }
 
     /* ── Lift card header ──────────────────────────── */
-    .lift-header { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 14px; }
-    .lift-title  { font-size: 17px; font-weight: 700; color: var(--fg); }
-    .lift-meta   { font-size: 11px; color: var(--fg2); margin-top: 3px; }
+    .lift-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      margin-bottom: 14px;
+    }
+
+    .lift-title {
+      font-size: 17px;
+      font-weight: 700;
+      color: var(--fg);
+    }
+
+    .lift-meta {
+      font-size: 11px;
+      color: var(--fg2);
+      margin-top: 3px;
+    }
 
     /* ── Section label ─────────────────────────────── */
     .section-label {
-      font-size: 12px; text-transform: uppercase; letter-spacing: 0.1em;
-      color: var(--accent-label); font-weight: 600; margin-bottom: 16px;
-      padding-bottom: 10px; border-bottom: 1px solid var(--accent-divider);
+      font-size: 12px;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      color: var(--accent-label);
+      font-weight: 600;
+      margin-bottom: 16px;
+      padding-bottom: 10px;
+      border-bottom: 1px solid var(--accent-divider);
     }
 
     /* ── Calc ──────────────────────────────────────── */
-    .calc-result { display: flex; align-items: center; gap: 14px; flex-wrap: wrap; }
-    .calc-output { font-size: 13px; color: var(--fg2); }
-    .result-num  { font-size: 22px; font-weight: 700; }
-    .note-small  { font-size: 12px; color: var(--gray); margin-top: 8px; }
+    .calc-result {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      flex-wrap: wrap;
+    }
+
+    .calc-output {
+      font-size: 13px;
+      color: var(--fg2);
+    }
+
+    .result-num {
+      font-size: 22px;
+      font-weight: 700;
+    }
+
+    .note-small {
+      font-size: 12px;
+      color: var(--gray);
+      margin-top: 8px;
+    }
 
     /* ── Footer ────────────────────────────────────── */
-    footer      { text-align: center; margin-top: 36px; color: var(--footer-color); font-size: 12px; }
-    footer a    { color: var(--footer-color); }
+    footer {
+      text-align: center;
+      margin-top: 36px;
+      color: var(--footer-color);
+      font-size: 12px;
+    }
+
+    footer a {
+      color: var(--footer-color);
+    }
 
     /* ── Warning ───────────────────────────────────── */
-    .warning-card { display: none; text-align: center; font-weight: 600; }
+    .warning-card {
+      display: none;
+      text-align: center;
+      font-weight: 600;
+    }
 
     /* ══════════════════════════════════════════════════
        THEME PICKER CARD
     ══════════════════════════════════════════════════ */
     .theme-picker {
-      display: flex; align-items: center; gap: 16px; flex-wrap: wrap;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 16px;
+      flex-wrap: wrap;
     }
+
     .theme-picker-label {
-      font-size: 12px; text-transform: uppercase; letter-spacing: 0.1em;
-      color: var(--fg2); font-weight: 600; white-space: nowrap;
+      font-size: 12px;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      color: var(--fg2);
+      font-weight: 600;
+      white-space: nowrap;
     }
-    .theme-options { display: flex; gap: 10px; }
+
+    .theme-options {
+      display: flex;
+      gap: 10px;
+    }
+
     .theme-btn {
-      display: flex; align-items: center; gap: 10px;
-      padding: 10px 16px; border-radius: 12px; cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 10px 16px;
+      border-radius: 12px;
+      cursor: pointer;
       border: 2px solid transparent;
       background: var(--week-inactive-bg);
       transition: border-color 0.2s, background 0.2s, transform 0.1s;
       font-family: 'Lexend', sans-serif;
     }
-    .theme-btn:hover { transform: translateY(-1px); }
-    .theme-btn.selected { border-color: var(--accent); }
-    .theme-btn-swatch {
-      width: 32px; height: 32px; border-radius: 8px;
-      flex-shrink: 0; overflow: hidden; display: flex;
-      box-shadow: 0 2px 8px rgba(0,0,0,0.25);
+
+    .theme-btn:hover {
+      transform: translateY(-1px);
     }
-    .theme-btn-swatch span { flex: 1; }
-    .theme-btn-info { display: flex; flex-direction: column; gap: 2px; }
-    .theme-btn-name { font-size: 13px; font-weight: 600; color: var(--fg); }
-    .theme-btn-desc { font-size: 11px; color: var(--fg2); }
+
+    .theme-btn.selected {
+      border-color: var(--accent);
+    }
+
+    .theme-btn-swatch {
+      width: 32px;
+      height: 32px;
+      border-radius: 8px;
+      flex-shrink: 0;
+      overflow: hidden;
+      display: flex;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.25);
+    }
+
+    .theme-btn-swatch span {
+      flex: 1;
+    }
+
+    .theme-btn-info {
+      display: flex;
+      flex-direction: column;
+      gap: 2px;
+    }
+
+    .theme-btn-name {
+      font-size: 13px;
+      font-weight: 600;
+      color: var(--fg);
+    }
+
+    .theme-btn-desc {
+      font-size: 11px;
+      color: var(--fg2);
+    }
 
     /* ── Lift focus modal ──────────────────────────── */
     .lift-modal-backdrop {
       display: none;
-      position: fixed; inset: 0; z-index: 100;
-      background: rgba(0,0,0,0);
+      position: fixed;
+      inset: 0;
+      z-index: 100;
+      background: rgba(0, 0, 0, 0);
       backdrop-filter: blur(0px);
       -webkit-backdrop-filter: blur(0px);
       transition: background 0.28s, backdrop-filter 0.28s;
-      align-items: center; justify-content: center;
+      align-items: center;
+      justify-content: center;
     }
+
     .lift-modal-backdrop.open {
       display: flex;
-      background: rgba(0,0,0,0.55);
+      background: rgba(0, 0, 0, 0.55);
       backdrop-filter: blur(10px);
       -webkit-backdrop-filter: blur(10px);
     }
+
     /* two-step transition: display:flex first, then opacity on next frame */
-    .lift-modal-backdrop.open { animation: backdropIn 0.28s ease forwards; }
+    .lift-modal-backdrop.open {
+      animation: backdropIn 0.28s ease forwards;
+    }
+
     @keyframes backdropIn {
-      from { background: rgba(0,0,0,0); backdrop-filter: blur(0px); -webkit-backdrop-filter: blur(0px); }
-      to   { background: rgba(0,0,0,0.55); backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px); }
+      from {
+        background: rgba(0, 0, 0, 0);
+        backdrop-filter: blur(0px);
+        -webkit-backdrop-filter: blur(0px);
+      }
+
+      to {
+        background: rgba(0, 0, 0, 0.55);
+        backdrop-filter: blur(10px);
+        -webkit-backdrop-filter: blur(10px);
+      }
     }
 
     .lift-modal {
@@ -459,66 +944,149 @@
       background: var(--card-bg);
       backdrop-filter: blur(32px);
       -webkit-backdrop-filter: blur(32px);
-      box-shadow: 0 24px 80px rgba(0,0,0,0.6);
+      box-shadow: 0 24px 80px rgba(0, 0, 0, 0.6);
       transform: translateY(16px) scale(0.97);
       opacity: 0;
-      transition: transform 0.28s cubic-bezier(0.34,1.28,0.64,1), opacity 0.22s ease;
+      transition: transform 0.28s cubic-bezier(0.34, 1.28, 0.64, 1), opacity 0.22s ease;
     }
+
     .lift-modal-backdrop.open .lift-modal {
       transform: translateY(0) scale(1);
       opacity: 1;
     }
 
     .lift-modal-close {
-      position: absolute; top: 16px; right: 18px;
-      background: rgba(255,255,255,0.08); border: 1px solid rgba(255,255,255,0.12);
-      border-radius: 50%; width: 32px; height: 32px;
-      display: flex; align-items: center; justify-content: center;
-      cursor: pointer; font-size: 16px; color: var(--fg2);
+      position: absolute;
+      top: 16px;
+      right: 18px;
+      background: rgba(255, 255, 255, 0.08);
+      border: 1px solid rgba(255, 255, 255, 0.12);
+      border-radius: 50%;
+      width: 32px;
+      height: 32px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      font-size: 16px;
+      color: var(--fg2);
       transition: background 0.15s, color 0.15s;
-      font-family: 'Lexend', sans-serif; line-height: 1;
+      font-family: 'Lexend', sans-serif;
+      line-height: 1;
     }
-    .lift-modal-close:hover { background: rgba(255,255,255,0.15); color: var(--fg); }
 
-    .lift-modal-title { font-size: 22px; font-weight: 700; color: var(--fg); margin-bottom: 4px; }
-    .lift-modal-meta  { font-size: 12px; color: var(--fg2); margin-bottom: 20px; }
+    .lift-modal-close:hover {
+      background: rgba(255, 255, 255, 0.15);
+      color: var(--fg);
+    }
+
+    .lift-modal-title {
+      font-size: 22px;
+      font-weight: 700;
+      color: var(--fg);
+      margin-bottom: 4px;
+    }
+
+    .lift-modal-meta {
+      font-size: 12px;
+      color: var(--fg2);
+      margin-bottom: 20px;
+    }
 
     /* Bigger table inside modal */
-    .lift-modal table { width: 100%; border-collapse: collapse; }
-    .lift-modal thead th { padding: 11px 16px; font-size: 12px; font-weight: 700; text-align: center; letter-spacing: 0.1em; text-transform: uppercase; }
-    .lift-modal tbody td { padding: 12px 16px; font-size: 14px; text-align: center; border-bottom: 1px solid var(--row-divider); transition: background 0.15s; }
-    .lift-modal tbody tr:last-child td { border-bottom: none; }
-    .lift-modal tbody tr.warm td { color: var(--gray); }
-    .lift-modal tbody td.weight-cell { font-size: 16px; font-weight: 600; }
-    .lift-modal tbody td.reps-cell   { font-size: 16px; font-weight: 700; }
-    .lift-modal tbody tr.highlighted td { background: var(--highlight-row) !important; }
+    .lift-modal table {
+      width: 100%;
+      border-collapse: collapse;
+    }
+
+    .lift-modal thead th {
+      padding: 11px 16px;
+      font-size: 12px;
+      font-weight: 700;
+      text-align: center;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+    }
+
+    .lift-modal tbody td {
+      padding: 12px 16px;
+      font-size: 14px;
+      text-align: center;
+      border-bottom: 1px solid var(--row-divider);
+      transition: background 0.15s;
+    }
+
+    .lift-modal tbody tr:last-child td {
+      border-bottom: none;
+    }
+
+    .lift-modal tbody tr.warm td {
+      color: var(--gray);
+    }
+
+    .lift-modal tbody td.weight-cell {
+      font-size: 16px;
+      font-weight: 600;
+    }
+
+    .lift-modal tbody td.reps-cell {
+      font-size: 16px;
+      font-weight: 700;
+    }
+
+    .lift-modal tbody tr.highlighted td {
+      background: var(--highlight-row) !important;
+    }
 
     /* card clickable affordance */
     .card-lift-clickable {
       cursor: pointer;
       transition: transform 0.15s, box-shadow 0.15s;
     }
+
     .card-lift-clickable:hover {
       transform: translateY(-3px);
-      box-shadow: 0 16px 48px rgba(0,0,0,0.5);
+      box-shadow: 0 16px 48px rgba(0, 0, 0, 0.5);
     }
-    .card-lift-clickable:active { transform: translateY(0); }
+
+    .card-lift-clickable:active {
+      transform: translateY(0);
+    }
 
     /* hint label */
     .expand-hint {
-      font-size: 11px; color: var(--gray); text-align: right;
-      margin-top: 10px; letter-spacing: 0.04em; opacity: 0.7;
+      font-size: 11px;
+      color: var(--gray);
+      text-align: right;
+      margin-top: 10px;
+      letter-spacing: 0.04em;
+      opacity: 0.7;
     }
 
     /* ── Responsive ────────────────────────────────── */
     @media (max-width: 700px) {
-      .grid-4, .grid-2, .grid-2-bottom { grid-template-columns: 1fr; }
-      .row { flex-wrap: wrap; }
-      .warning-card { display: block; }
-      .theme-options { flex-wrap: wrap; }
+
+      .grid-4,
+      .grid-2,
+      .grid-2-bottom {
+        grid-template-columns: 1fr;
+      }
+
+      .row {
+        flex-wrap: wrap;
+      }
+
+      .warning-card {
+        display: block;
+      }
+
+      .theme-options {
+        flex-wrap: wrap;
+      }
     }
   </style>
 </head>
+
 <body>
   <div class="container">
 
@@ -603,26 +1171,30 @@
         <div class="section-label">Your 1 Rep Maxes</div>
         <div class="grid-4 mb-18">
           <div>
-            <label class="label-xs" style="display:block;margin-bottom:6px;color:var(--bench-b);font-weight:600;">Bench Press</label>
+            <label class="label-xs" style="display:block;margin-bottom:6px;color:var(--bench-b);font-weight:600;">Bench
+              Press</label>
             <input type="number" id="benchPressInput" class="inp-bench" placeholder="e.g. 225" maxlength="3">
           </div>
           <div>
-            <label class="label-xs" style="display:block;margin-bottom:6px;color:var(--squat-b);font-weight:600;">Squat</label>
+            <label class="label-xs"
+              style="display:block;margin-bottom:6px;color:var(--squat-b);font-weight:600;">Squat</label>
             <input type="number" id="squatInput" class="inp-squat" placeholder="e.g. 315" maxlength="3">
           </div>
           <div>
-            <label class="label-xs" style="display:block;margin-bottom:6px;color:var(--dl-b);font-weight:600;">Deadlift</label>
+            <label class="label-xs"
+              style="display:block;margin-bottom:6px;color:var(--dl-b);font-weight:600;">Deadlift</label>
             <input type="number" id="deadliftInput" class="inp-deadlift" placeholder="e.g. 405" maxlength="3">
           </div>
           <div>
-            <label class="label-xs" style="display:block;margin-bottom:6px;color:var(--ohp-b);font-weight:600;">Overhead Press</label>
+            <label class="label-xs" style="display:block;margin-bottom:6px;color:var(--ohp-b);font-weight:600;">Overhead
+              Press</label>
             <input type="number" id="overheadPressInput" class="inp-ohp" placeholder="e.g. 135" maxlength="3">
           </div>
         </div>
-        <div class="row">
-          <button class="btn btn-primary" onclick="onGenerateButtonClick()">Generate Lift Chart</button>
-          <button class="btn btn-ghost"  onclick="document.getElementById('fileInput').click()">Upload JSON</button>
+        <div class="row" style="justify-content: center;">
+          <button class="btn btn-ghost" onclick="document.getElementById('fileInput').click()">Upload JSON</button>
           <button class="btn btn-ghost2" onclick="exportData()">Export JSON</button>
+          <button class="btn btn-primary" onclick="onGenerateButtonClick()">Generate Lift Chart</button>
         </div>
         <input type="file" id="fileInput" style="display:none" onchange="loadFile(event)" accept=".json">
       </div>
@@ -631,10 +1203,10 @@
       <div id="weekSelectorRow" style="display:none;">
         <div class="week-tabs" id="weekTabs">
           <button class="week-tab active-1" onclick="setWeek(1)">Week 1 · 5/5/5+</button>
-          <button class="week-tab"          onclick="setWeek(2)">Week 2 · 3/3/3+</button>
-          <button class="week-tab"          onclick="setWeek(3)">Week 3 · 5/3/1+</button>
-          <button class="week-tab"          onclick="setWeek(4)">Deload</button>
-          <button class="week-tab"          onclick="setWeek(5)">Hypertrophy</button>
+          <button class="week-tab" onclick="setWeek(2)">Week 2 · 3/3/3+</button>
+          <button class="week-tab" onclick="setWeek(3)">Week 3 · 5/3/1+</button>
+          <button class="week-tab" onclick="setWeek(4)">Deload</button>
+          <button class="week-tab" onclick="setWeek(5)">Hypertrophy</button>
         </div>
       </div>
 
@@ -643,34 +1215,58 @@
         <div class="grid-2">
           <div class="card card-bench card-lift-clickable" onclick="openModal('bench')">
             <div class="lift-header">
-              <div><div class="lift-title">Bench Press</div><div class="lift-meta" id="benchMeta">—</div></div>
+              <div>
+                <div class="lift-title">Bench Press</div>
+                <div class="lift-meta" id="benchMeta">—</div>
+              </div>
               <span class="tag tag-bench" id="benchTag">—</span>
             </div>
-            <table><thead id="benchHead"></thead><tbody id="benchBody"></tbody></table>
+            <table>
+              <thead id="benchHead"></thead>
+              <tbody id="benchBody"></tbody>
+            </table>
             <div class="expand-hint">Click to expand ↗</div>
           </div>
           <div class="card card-squat card-lift-clickable" onclick="openModal('squat')">
             <div class="lift-header">
-              <div><div class="lift-title">Squat</div><div class="lift-meta" id="squatMeta">—</div></div>
+              <div>
+                <div class="lift-title">Squat</div>
+                <div class="lift-meta" id="squatMeta">—</div>
+              </div>
               <span class="tag tag-squat" id="squatTag">—</span>
             </div>
-            <table><thead id="squatHead"></thead><tbody id="squatBody"></tbody></table>
+            <table>
+              <thead id="squatHead"></thead>
+              <tbody id="squatBody"></tbody>
+            </table>
             <div class="expand-hint">Click to expand ↗</div>
           </div>
           <div class="card card-deadlift card-lift-clickable" onclick="openModal('deadlift')">
             <div class="lift-header">
-              <div><div class="lift-title">Deadlift</div><div class="lift-meta" id="deadliftMeta">—</div></div>
+              <div>
+                <div class="lift-title">Deadlift</div>
+                <div class="lift-meta" id="deadliftMeta">—</div>
+              </div>
               <span class="tag tag-deadlift" id="deadliftTag">—</span>
             </div>
-            <table><thead id="deadliftHead"></thead><tbody id="deadliftBody"></tbody></table>
+            <table>
+              <thead id="deadliftHead"></thead>
+              <tbody id="deadliftBody"></tbody>
+            </table>
             <div class="expand-hint">Click to expand ↗</div>
           </div>
           <div class="card card-ohp card-lift-clickable" onclick="openModal('ohp')">
             <div class="lift-header">
-              <div><div class="lift-title">Overhead Press</div><div class="lift-meta" id="ohpMeta">—</div></div>
+              <div>
+                <div class="lift-title">Overhead Press</div>
+                <div class="lift-meta" id="ohpMeta">—</div>
+              </div>
               <span class="tag tag-ohp" id="ohpTag">—</span>
             </div>
-            <table><thead id="ohpHead"></thead><tbody id="ohpBody"></tbody></table>
+            <table>
+              <thead id="ohpHead"></thead>
+              <tbody id="ohpBody"></tbody>
+            </table>
             <div class="expand-hint">Click to expand ↗</div>
           </div>
         </div>
@@ -691,8 +1287,10 @@
             </div>
           </div>
           <div class="calc-result">
-            <button class="btn btn-lift" style="background:var(--ohp-m);color:#fff;border:none;" onclick="onCalculateButtonClick()">Calculate</button>
-            <span class="calc-output">1RM: <strong id="oneRepMaxFinal" class="result-num" style="color:var(--ohp-b)">—</strong></span>
+            <button class="btn btn-lift" style="background:var(--ohp-m);color:#fff;border:none;"
+              onclick="onCalculateButtonClick()">Calculate</button>
+            <span class="calc-output">1RM: <strong id="oneRepMaxFinal" class="result-num"
+                style="color:var(--ohp-b)">—</strong></span>
           </div>
           <p class="note-small" id="oneRepMaxNote"></p>
         </div>
@@ -709,15 +1307,18 @@
             </div>
           </div>
           <div class="calc-result">
-            <button class="btn btn-lift" style="background:var(--bench-m);color:#fff;border:none;" onclick="onRepsNeededClick()">Calculate</button>
-            <span class="calc-output">Reps needed: <strong id="repsNeededOutput" class="result-num" style="color:var(--bench-b)">—</strong></span>
+            <button class="btn btn-lift" style="background:var(--bench-m);color:#fff;border:none;"
+              onclick="onRepsNeededClick()">Calculate</button>
+            <span class="calc-output">Reps needed: <strong id="repsNeededOutput" class="result-num"
+                style="color:var(--bench-b)">—</strong></span>
           </div>
           <p class="note-small" id="repsNeededNote"></p>
         </div>
       </div>
 
       <!-- ── Small screen warning ── -->
-      <div class="card warning-card" style="border:1px solid var(--dl-border);border-top:3px solid var(--dl-m);background:var(--dl-bg);">
+      <div class="card warning-card"
+        style="border:1px solid var(--dl-border);border-top:3px solid var(--dl-m);background:var(--dl-bg);">
         <p style="color:var(--dl-b)">Screen too small for lift tables.<br>Please use a wider device.</p>
       </div>
 
@@ -728,7 +1329,7 @@
       <div class="lift-modal" id="liftModal">
         <button class="lift-modal-close" onclick="closeModal()" title="Close">✕</button>
         <div class="lift-modal-title" id="modalTitle">—</div>
-        <div class="lift-modal-meta"  id="modalMeta">—</div>
+        <div class="lift-modal-meta" id="modalMeta">—</div>
         <table>
           <thead id="modalHead"></thead>
           <tbody id="modalBody"></tbody>
@@ -747,7 +1348,7 @@
 
   <script>
     /* ─── Theme ──────────────────────────────────────── */
-    const THEMES = ['claude','gruvbox','apprentice','github'];
+    const THEMES = ['claude', 'gruvbox', 'apprentice', 'github'];
 
     function setTheme(t) {
       document.documentElement.setAttribute('data-theme', t);
@@ -759,7 +1360,7 @@
     }
 
     // Restore saved theme immediately
-    (function() {
+    (function () {
       const saved = localStorage.getItem('531_theme');
       if (saved && THEMES.includes(saved)) setTheme(saved);
     })();
@@ -768,13 +1369,13 @@
     let data = null;
     let currentWeek = 1;
 
-    const WEEK_LABELS = { 1:'5/5/5+', 2:'3/3/3+', 3:'5/3/1+', 4:'Deload', 5:'Hypertrophy' };
+    const WEEK_LABELS = { 1: '5/5/5+', 2: '3/3/3+', 3: '5/3/1+', 4: 'Deload', 5: 'Hypertrophy' };
 
     const LIFTS = [
-      { key:'benchPress',    bodyId:'benchBody',    headId:'benchHead',    metaId:'benchMeta',    tagId:'benchTag',    cls:'bench'    },
-      { key:'squat',         bodyId:'squatBody',    headId:'squatHead',    metaId:'squatMeta',    tagId:'squatTag',    cls:'squat'    },
-      { key:'deadlift',      bodyId:'deadliftBody', headId:'deadliftHead', metaId:'deadliftMeta', tagId:'deadliftTag', cls:'deadlift' },
-      { key:'overheadPress', bodyId:'ohpBody',      headId:'ohpHead',      metaId:'ohpMeta',      tagId:'ohpTag',      cls:'ohp'      },
+      { key: 'benchPress', bodyId: 'benchBody', headId: 'benchHead', metaId: 'benchMeta', tagId: 'benchTag', cls: 'bench' },
+      { key: 'squat', bodyId: 'squatBody', headId: 'squatHead', metaId: 'squatMeta', tagId: 'squatTag', cls: 'squat' },
+      { key: 'deadlift', bodyId: 'deadliftBody', headId: 'deadliftHead', metaId: 'deadliftMeta', tagId: 'deadliftTag', cls: 'deadlift' },
+      { key: 'overheadPress', bodyId: 'ohpBody', headId: 'ohpHead', metaId: 'ohpMeta', tagId: 'ohpTag', cls: 'ohp' },
     ];
 
     /* ─── Restore saved data ─────────────────────────── */
@@ -785,21 +1386,21 @@
         if (saved) {
           data = JSON.parse(saved);
           const d = data;
-          if (d.benchPress)    document.getElementById('benchPressInput').value    = d.benchPress;
-          if (d.squat)         document.getElementById('squatInput').value         = d.squat;
-          if (d.deadlift)      document.getElementById('deadliftInput').value      = d.deadlift;
+          if (d.benchPress) document.getElementById('benchPressInput').value = d.benchPress;
+          if (d.squat) document.getElementById('squatInput').value = d.squat;
+          if (d.deadlift) document.getElementById('deadliftInput').value = d.deadlift;
           if (d.overheadPress) document.getElementById('overheadPressInput').value = d.overheadPress;
           currentWeek = savedWeek ? parseInt(savedWeek) : 1;
           renderAll();
         }
-      } catch(e) {}
+      } catch (e) { }
     })();
 
     /* ─── Math ───────────────────────────────────────── */
     function roundToNearest5(x) { return Math.round(x / 5) * 5; }
 
     function calculatePlates(weight) {
-      const plates = [45,35,25,15,10,5,2.5];
+      const plates = [45, 35, 25, 15, 10, 5, 2.5];
       const result = [];
       for (const p of plates) { while (weight >= p) { result.push(p); weight -= p; } }
       return result;
@@ -813,17 +1414,17 @@
     /* ─── Set schemes ────────────────────────────────── */
     function getSetsForWeek(trainingMax, week) {
       const tm = trainingMax;
-      const warm = [{ pct:0.35,reps:5 },{ pct:0.45,reps:5 },{ pct:0.55,reps:3 }];
+      const warm = [{ pct: 0.35, reps: 5 }, { pct: 0.45, reps: 5 }, { pct: 0.55, reps: 3 }];
       const workSets = {
-        1:[{ pct:0.65,reps:5  },{ pct:0.75,reps:5  },{ pct:0.85,reps:'5+'},{ pct:0.55,reps:10 }],
-        2:[{ pct:0.70,reps:3  },{ pct:0.80,reps:3  },{ pct:0.90,reps:'3+'},{ pct:0.55,reps:10 }],
-        3:[{ pct:0.75,reps:5  },{ pct:0.85,reps:3  },{ pct:0.95,reps:'1+'},{ pct:0.55,reps:10 }],
-        4:[{ pct:0.55,reps:10 },{ pct:0.60,reps:10 },{ pct:0.65,reps:10 }],
-        5:[{ pct:0.65,reps:10 },{ pct:0.70,reps:10 },{ pct:0.75,reps:10 }],
+        1: [{ pct: 0.65, reps: 5 }, { pct: 0.75, reps: 5 }, { pct: 0.85, reps: '5+' }, { pct: 0.55, reps: 10 }],
+        2: [{ pct: 0.70, reps: 3 }, { pct: 0.80, reps: 3 }, { pct: 0.90, reps: '3+' }, { pct: 0.55, reps: 10 }],
+        3: [{ pct: 0.75, reps: 5 }, { pct: 0.85, reps: 3 }, { pct: 0.95, reps: '1+' }, { pct: 0.55, reps: 10 }],
+        4: [{ pct: 0.55, reps: 10 }, { pct: 0.60, reps: 10 }, { pct: 0.65, reps: 10 }],
+        5: [{ pct: 0.65, reps: 10 }, { pct: 0.70, reps: 10 }, { pct: 0.75, reps: 10 }],
       };
       return {
         warm: warm.map(s => ({ ...s, weight: roundToNearest5(tm * s.pct) })),
-        work: (workSets[week]||[]).map(s => ({ ...s, weight: roundToNearest5(tm * s.pct) })),
+        work: (workSets[week] || []).map(s => ({ ...s, weight: roundToNearest5(tm * s.pct) })),
       };
     }
 
@@ -841,12 +1442,12 @@
 
       LIFTS.forEach(({ key, bodyId, headId, metaId, tagId, cls }) => {
         const max = data[key];
-        const tm  = roundToNearest5(max * 0.9);
+        const tm = roundToNearest5(max * 0.9);
         const { warm, work } = getSetsForWeek(tm, currentWeek);
         const varName = cls === 'deadlift' ? 'dl' : cls;
 
         document.getElementById(metaId).textContent = `1RM: ${max} lbs · Training Max: ${tm} lbs`;
-        document.getElementById(tagId).textContent   = WEEK_LABELS[currentWeek];
+        document.getElementById(tagId).textContent = WEEK_LABELS[currentWeek];
 
         // Header
         const head = document.getElementById(headId);
@@ -867,8 +1468,8 @@
           const tr = document.createElement('tr');
           tr.className = 'warm';
           tr.innerHTML = `
-            <td>W${i+1}</td>
-            <td>${Math.round(s.pct*100)}%</td>
+            <td>W${i + 1}</td>
+            <td>${Math.round(s.pct * 100)}%</td>
             <td class="weight-cell">${s.weight} lbs</td>
             <td class="reps-cell">${s.reps}</td>
             <td style="font-size:12px">${plateTooltip(s.weight)}</td>`;
@@ -878,8 +1479,8 @@
         work.forEach((s, i) => {
           const tr = document.createElement('tr');
           tr.innerHTML = `
-            <td style="color:var(--fg2)">${i+1}</td>
-            <td style="color:var(--gray)">${Math.round(s.pct*100)}%</td>
+            <td style="color:var(--fg2)">${i + 1}</td>
+            <td style="color:var(--gray)">${Math.round(s.pct * 100)}%</td>
             <td class="weight-cell" style="color:var(--fg)">${s.weight} lbs</td>
             <td class="reps-cell" style="color:${liftColor}">${s.reps}</td>
             <td style="font-size:12px;color:var(--gray)">${plateTooltip(s.weight)}</td>`;
@@ -909,11 +1510,11 @@
     function onGenerateButtonClick() {
       const bench = parseInt(document.getElementById('benchPressInput').value);
       const squat = parseInt(document.getElementById('squatInput').value);
-      const dl    = parseInt(document.getElementById('deadliftInput').value);
-      const ohp   = parseInt(document.getElementById('overheadPressInput').value);
-      if ([bench,squat,dl,ohp].some(v => isNaN(v) || v <= 0)) { alert('Please enter valid positive numbers for all four lifts.'); return; }
-      if ([bench,squat,dl,ohp].some(v => v > 999)) { alert('Please enter realistic values (under 1000 lbs).'); return; }
-      data = { benchPress:bench, squat, deadlift:dl, overheadPress:ohp };
+      const dl = parseInt(document.getElementById('deadliftInput').value);
+      const ohp = parseInt(document.getElementById('overheadPressInput').value);
+      if ([bench, squat, dl, ohp].some(v => isNaN(v) || v <= 0)) { alert('Please enter valid positive numbers for all four lifts.'); return; }
+      if ([bench, squat, dl, ohp].some(v => v > 999)) { alert('Please enter realistic values (under 1000 lbs).'); return; }
+      data = { benchPress: bench, squat, deadlift: dl, overheadPress: ohp };
       localStorage.setItem('531_data', JSON.stringify(data));
       renderAll();
     }
@@ -926,13 +1527,13 @@
         try {
           data = JSON.parse(e.target.result);
           const d = data;
-          if (d.benchPress)    document.getElementById('benchPressInput').value    = d.benchPress;
-          if (d.squat)         document.getElementById('squatInput').value         = d.squat;
-          if (d.deadlift)      document.getElementById('deadliftInput').value      = d.deadlift;
+          if (d.benchPress) document.getElementById('benchPressInput').value = d.benchPress;
+          if (d.squat) document.getElementById('squatInput').value = d.squat;
+          if (d.deadlift) document.getElementById('deadliftInput').value = d.deadlift;
           if (d.overheadPress) document.getElementById('overheadPressInput').value = d.overheadPress;
           localStorage.setItem('531_data', JSON.stringify(data));
           renderAll();
-        } catch(err) { alert('Error: Invalid JSON file.'); }
+        } catch (err) { alert('Error: Invalid JSON file.'); }
       };
       reader.onerror = () => alert('Error reading file.');
       reader.readAsText(file);
@@ -940,9 +1541,9 @@
 
     function exportData() {
       if (!data) { alert('Generate a chart first.'); return; }
-      const blob = new Blob([JSON.stringify(data,null,2)],{type:'application/json'});
-      const url  = URL.createObjectURL(blob);
-      const a    = document.createElement('a');
+      const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
       a.href = url; a.download = 'lift_data.json';
       document.body.appendChild(a); a.click();
       document.body.removeChild(a); URL.revokeObjectURL(url);
@@ -961,8 +1562,8 @@
       const out = document.getElementById('oneRepMaxFinal');
       const note = document.getElementById('oneRepMaxNote');
       out.textContent = '—'; note.textContent = '';
-      if (isNaN(w)||isNaN(r)||w<=0||r<=0) return;
-      out.textContent = calculateOneRepMax(w,r) || '—';
+      if (isNaN(w) || isNaN(r) || w <= 0 || r <= 0) return;
+      out.textContent = calculateOneRepMax(w, r) || '—';
       if (r > 10) note.textContent = 'Note: estimates above ~10 reps are less reliable.';
     }
 
@@ -973,9 +1574,9 @@
       const out = document.getElementById('repsNeededOutput');
       const note = document.getElementById('repsNeededNote');
       out.textContent = '—'; note.textContent = '';
-      if (!Number.isFinite(w)||!Number.isFinite(t)||w<=0||t<=0) { note.textContent='Enter positive numbers for both fields.'; return; }
-      if (t <= w) { out.textContent='1'; note.textContent='One rep already puts your estimated 1RM at or above target.'; return; }
-      let reps = Math.min(20, Math.max(1, Math.ceil(30*(t/w-1))));
+      if (!Number.isFinite(w) || !Number.isFinite(t) || w <= 0 || t <= 0) { note.textContent = 'Enter positive numbers for both fields.'; return; }
+      if (t <= w) { out.textContent = '1'; note.textContent = 'One rep already puts your estimated 1RM at or above target.'; return; }
+      let reps = Math.min(20, Math.max(1, Math.ceil(30 * (t / w - 1))));
       out.textContent = String(reps);
       if (reps >= 13) note.textContent = 'Estimates above ~12 reps are less reliable. Consider increasing load.';
       else if (reps <= 3) note.textContent = 'Low-rep estimate — good accuracy. Warm up well.';
@@ -983,10 +1584,10 @@
 
     /* ─── Lift focus modal ───────────────────────────── */
     const MODAL_META = {
-      bench:    { title: 'Bench Press',    cls: 'bench',    varPfx: 'bench' },
-      squat:    { title: 'Squat',          cls: 'squat',    varPfx: 'squat' },
-      deadlift: { title: 'Deadlift',       cls: 'deadlift', varPfx: 'dl'    },
-      ohp:      { title: 'Overhead Press', cls: 'ohp',      varPfx: 'ohp'   },
+      bench: { title: 'Bench Press', cls: 'bench', varPfx: 'bench' },
+      squat: { title: 'Squat', cls: 'squat', varPfx: 'squat' },
+      deadlift: { title: 'Deadlift', cls: 'deadlift', varPfx: 'dl' },
+      ohp: { title: 'Overhead Press', cls: 'ohp', varPfx: 'ohp' },
     };
 
     const DATA_KEY = {
@@ -997,7 +1598,7 @@
       if (!data) return;
       const { title, cls, varPfx } = MODAL_META[liftKey];
       const max = data[DATA_KEY[liftKey]];
-      const tm  = roundToNearest5(max * 0.9);
+      const tm = roundToNearest5(max * 0.9);
       const { warm, work } = getSetsForWeek(tm, currentWeek);
       const liftColor = cssVar(`--${varPfx}-b`);
       const borderColor = cssVar(`--${varPfx}-border`);
@@ -1032,8 +1633,8 @@
         const tr = document.createElement('tr');
         tr.className = 'warm';
         tr.innerHTML = `
-          <td>W${i+1}</td>
-          <td>${Math.round(s.pct*100)}%</td>
+          <td>W${i + 1}</td>
+          <td>${Math.round(s.pct * 100)}%</td>
           <td class="weight-cell">${s.weight} lbs</td>
           <td class="reps-cell">${s.reps}</td>
           <td style="font-size:13px">${plateTooltip(s.weight)}</td>`;
@@ -1043,8 +1644,8 @@
       work.forEach((s, i) => {
         const tr = document.createElement('tr');
         tr.innerHTML = `
-          <td style="color:var(--fg2)">${i+1}</td>
-          <td style="color:var(--gray)">${Math.round(s.pct*100)}%</td>
+          <td style="color:var(--fg2)">${i + 1}</td>
+          <td style="color:var(--gray)">${Math.round(s.pct * 100)}%</td>
           <td class="weight-cell" style="color:var(--fg)">${s.weight} lbs</td>
           <td class="reps-cell" style="color:${liftColor}">${s.reps}</td>
           <td style="font-size:13px;color:var(--gray)">${plateTooltip(s.weight)}</td>`;
@@ -1087,10 +1688,11 @@
     document.addEventListener('keydown', e => {
       if (e.key !== 'Enter') return;
       const id = document.activeElement && document.activeElement.id;
-      if (['weight','reps'].includes(id))                                                { e.preventDefault(); onCalculateButtonClick(); }
-      if (['loadedWeight','target1rm'].includes(id))                                     { e.preventDefault(); onRepsNeededClick(); }
-      if (['benchPressInput','squatInput','deadliftInput','overheadPressInput'].includes(id)) { e.preventDefault(); onGenerateButtonClick(); }
+      if (['weight', 'reps'].includes(id)) { e.preventDefault(); onCalculateButtonClick(); }
+      if (['loadedWeight', 'target1rm'].includes(id)) { e.preventDefault(); onRepsNeededClick(); }
+      if (['benchPressInput', 'squatInput', 'deadliftInput', 'overheadPressInput'].includes(id)) { e.preventDefault(); onGenerateButtonClick(); }
     });
   </script>
 </body>
+
 </html>
