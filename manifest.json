@@ -1,0 +1,18 @@
+{
+  "name": "5/3/1 Lift Generator",
+  "short_name": "531 Lifts",
+  "description": "Lift charts based on the 5/3/1 plan by Jim Wendler",
+  "start_url": ".",
+  "display": "standalone",
+  "background_color": "#282828",
+  "theme_color": "#282828",
+  "orientation": "portrait-primary",
+  "icons": [
+    {
+      "src": "icon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any"
+    }
+  ]
+}

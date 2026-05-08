@@ -3,11 +3,17 @@
 
 <head>
   <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
   <meta name="author" content="Jacob Davis">
   <meta property="og:title" content="5-3-1 Lift Generator">
   <meta property="og:description"
     content="A website that calculates lift charts based on the 5-3-1 plan by Jim Wendler">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="apple-mobile-web-app-title" content="531 Lifts">
+  <link rel="icon" href="icon.svg" type="image/svg+xml">
+  <link rel="apple-touch-icon" href="icon.svg">
+  <link rel="manifest" href="manifest.json">
   <title>5-3-1 Lift Generator</title>
   <link href="https://fonts.googleapis.com/css2?family=Lexend:wght@300;400;500;600;700;800&display=swap"
     rel="stylesheet">
@@ -338,7 +344,7 @@
       min-height: 100vh;
       background-color: var(--bg);
       background-image: var(--bg-noise), var(--bg-glow1), var(--bg-glow2), var(--bg-glow3), var(--bg-glow4);
-      padding: 40px 32px 64px;
+      padding: calc(env(safe-area-inset-top) + 40px) max(32px, env(safe-area-inset-right)) calc(env(safe-area-inset-bottom) + 64px) max(32px, env(safe-area-inset-left));
       transition: background-color 0.35s, color 0.35s;
     }
 
@@ -564,6 +570,7 @@
 
     /* ── Layout ────────────────────────────────────── */
     .container {
+      width: 100%;
       max-width: 1120px;
       margin: 0 auto;
     }
@@ -1074,14 +1081,21 @@
 
       .row {
         flex-wrap: wrap;
+        justify-content: center;
       }
 
       .warning-card {
         display: block;
       }
 
+      .theme-picker {
+        flex-direction: column;
+        align-items: center;
+      }
+
       .theme-options {
         flex-wrap: wrap;
+        justify-content: center;
       }
     }
   </style>
