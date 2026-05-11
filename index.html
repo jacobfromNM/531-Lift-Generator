@@ -11,8 +11,8 @@
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
   <meta name="apple-mobile-web-app-title" content="531 Lifts">
-  <link rel="icon" href="icon.svg" type="image/svg+xml">
-  <link rel="apple-touch-icon" href="icon.svg">
+  <link rel="icon" href="icon.png" type="image/png">
+  <link rel="apple-touch-icon" href="icon.png">
   <link rel="manifest" href="manifest.json">
   <title>5-3-1 Lift Generator</title>
   <link href="https://fonts.googleapis.com/css2?family=Lexend:wght@300;400;500;600;700;800&display=swap"
@@ -28,6 +28,7 @@
 
     html {
       min-height: 100%;
+      overflow-x: hidden;
     }
 
     /* ══════════════════════════════════════════════════
@@ -342,6 +343,7 @@
       font-family: 'Lexend', sans-serif;
       color: var(--fg);
       min-height: 100vh;
+      overflow-x: hidden;
       background-color: var(--bg);
       background-image: var(--bg-noise), var(--bg-glow1), var(--bg-glow2), var(--bg-glow3), var(--bg-glow4);
       padding: calc(env(safe-area-inset-top) + 40px) max(32px, env(safe-area-inset-right)) calc(env(safe-area-inset-bottom) + 64px) max(32px, env(safe-area-inset-left));
@@ -1071,6 +1073,14 @@
     }
 
     /* ── Responsive ────────────────────────────────── */
+
+    /* Lift cards need ~860px to show two table columns side-by-side */
+    @media (max-width: 860px) {
+      #liftCards .grid-2 {
+        grid-template-columns: 1fr;
+      }
+    }
+
     @media (max-width: 700px) {
 
       .grid-4,
@@ -1084,10 +1094,6 @@
         justify-content: center;
       }
 
-      .warning-card {
-        display: block;
-      }
-
       .theme-picker {
         flex-direction: column;
         align-items: center;
@@ -1096,6 +1102,19 @@
       .theme-options {
         flex-wrap: wrap;
         justify-content: center;
+      }
+    }
+
+    /* ── Too-narrow: hide tables, show warning ──── */
+    @media (max-width: 460px) {
+      #weekSelectorRow,
+      #liftCards,
+      .grid-2-bottom {
+        display: none !important;
+      }
+
+      .warning-card {
+        display: block;
       }
     }
   </style>
@@ -1333,7 +1352,8 @@
       <!-- ── Small screen warning ── -->
       <div class="card warning-card"
         style="border:1px solid var(--dl-border);border-top:3px solid var(--dl-m);background:var(--dl-bg);">
-        <p style="color:var(--dl-b)">Screen too small for lift tables.<br>Please use a wider device.</p>
+        <p style="color:var(--dl-b);font-size:15px;font-weight:700;margin-bottom:6px;">Uh oh! The screen is too small.</p>
+        <p style="color:var(--fg2);font-size:13px;">Please use a wider device to view your lift tables.</p>
       </div>
 
     </div>
