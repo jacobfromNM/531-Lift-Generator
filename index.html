@@ -726,6 +726,142 @@
     header {
       text-align: center;
       margin-bottom: 36px;
+      position: relative;
+    }
+
+    .help-btn {
+      position: absolute;
+      top: 4px;
+      right: 0;
+      width: 36px;
+      height: 36px;
+      border-radius: 50%;
+      border: 1px solid var(--accent-border);
+      background: var(--btn-ghost-bg);
+      color: var(--accent-label);
+      font-family: 'Lexend', sans-serif;
+      font-size: 17px;
+      font-weight: 700;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: background 0.15s, color 0.15s, border-color 0.15s;
+      line-height: 1;
+    }
+
+    .help-btn:hover {
+      background: var(--accent-border);
+      color: var(--fg);
+      border-color: var(--accent-label);
+    }
+
+    /* ── Help modal ──────────────────────────────────── */
+    .help-modal-content {
+      display: flex;
+      flex-direction: column;
+      gap: 22px;
+    }
+
+    .help-section h3 {
+      font-size: 13px;
+      font-weight: 700;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--accent-label);
+      margin-bottom: 10px;
+    }
+
+    .help-steps {
+      list-style: none;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    .help-steps li {
+      display: flex;
+      gap: 12px;
+      font-size: 14px;
+      color: var(--fg1);
+      line-height: 1.55;
+    }
+
+    .help-step-num {
+      flex-shrink: 0;
+      width: 22px;
+      height: 22px;
+      border-radius: 50%;
+      background: var(--accent-border);
+      border: 1px solid var(--accent-label);
+      color: var(--accent-label);
+      font-size: 11px;
+      font-weight: 700;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-top: 1px;
+    }
+
+    .help-tips {
+      list-style: none;
+      display: flex;
+      flex-direction: column;
+      gap: 7px;
+    }
+
+    .help-tips li {
+      font-size: 13.5px;
+      color: var(--fg1);
+      line-height: 1.5;
+      padding-left: 18px;
+      position: relative;
+    }
+
+    .help-tips li::before {
+      content: '–';
+      position: absolute;
+      left: 0;
+      color: var(--gray);
+    }
+
+    .help-divider {
+      border: none;
+      border-top: 1px solid var(--accent-divider);
+    }
+
+    .help-week-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 13px;
+    }
+
+    .help-week-table th {
+      text-align: left;
+      padding: 7px 10px;
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 0.09em;
+      text-transform: uppercase;
+      color: var(--accent-label);
+      border-bottom: 1px solid var(--accent-divider);
+    }
+
+    .help-week-table td {
+      padding: 8px 10px;
+      color: var(--fg1);
+      border-bottom: 1px solid var(--row-divider);
+      vertical-align: top;
+    }
+
+    .help-week-table tr:last-child td {
+      border-bottom: none;
+    }
+
+    .help-week-table .week-label {
+      font-weight: 600;
+      color: var(--fg);
+      white-space: nowrap;
     }
 
     .logo {
@@ -1137,6 +1273,7 @@
         <span class="logo-digit" id="logo3" style="color:var(--logo3)">1</span>
       </div>
       <div class="logo-sub">Lift Generator</div>
+      <button class="help-btn" onclick="openHelpModal()" title="How do I use this?">?</button>
     </header>
 
     <div class="stack">
@@ -1372,6 +1509,98 @@
           <thead id="modalHead"></thead>
           <tbody id="modalBody"></tbody>
         </table>
+      </div>
+    </div>
+
+    <!-- ── Help modal ── -->
+    <div class="lift-modal-backdrop" id="helpModalBackdrop" onclick="handleHelpBackdropClick(event)">
+      <div class="lift-modal" id="helpModal" style="border-top: 3px solid var(--accent-label); border: 1px solid var(--accent-border); border-top: 3px solid var(--accent-label);">
+        <button class="lift-modal-close" onclick="closeHelpModal()" title="Close">✕</button>
+        <div class="lift-modal-title">How to Use This App</div>
+        <div class="lift-modal-meta">5/3/1 by Jim Wendler &mdash; a simple, proven strength program</div>
+
+        <div class="help-modal-content">
+
+          <div class="help-section">
+            <h3>Getting Started</h3>
+            <ol class="help-steps">
+              <li>
+                <span class="help-step-num">1</span>
+                <span>Enter your <strong>1-rep max (1RM)</strong> for each lift in the input fields at the top and click <em>Generate Charts</em>. This is the most weight you can lift once with good form.</span>
+              </li>
+              <li>
+                <span class="help-step-num">2</span>
+                <span><strong>Don't know your 1RM?</strong> No problem — use the <em>1RM Calculator</em> at the bottom of the page. Enter a weight you can lift for a few reps and it'll estimate your max for you.</span>
+              </li>
+              <li>
+                <span class="help-step-num">3</span>
+                <span>The app sets your <strong>Training Max</strong> to 90% of your 1RM. All your working weights are calculated from this number — it keeps progress conservative and sustainable.</span>
+              </li>
+              <li>
+                <span class="help-step-num">4</span>
+                <span>Select a week tab to see that week's sets and weights. After finishing all 4 (or 5) weeks, bump each lift by <strong>5 lbs</strong> (upper body) or <strong>10 bs</strong> (lower body) and repeat.</span>
+              </li>
+            </ol>
+          </div>
+
+          <hr class="help-divider">
+
+          <div class="help-section">
+            <h3>The Weekly Cycle</h3>
+            <table class="help-week-table">
+              <thead>
+                <tr>
+                  <th>Week</th>
+                  <th>Scheme</th>
+                  <th>Notes</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td class="week-label">Week 1</td>
+                  <td>5 / 5 / 5+</td>
+                  <td>Three working sets. The "+" on the last set means do as many reps as you can.</td>
+                </tr>
+                <tr>
+                  <td class="week-label">Week 2</td>
+                  <td>3 / 3 / 3+</td>
+                  <td>Heavier weights, fewer reps. Same idea — push the last set.</td>
+                </tr>
+                <tr>
+                  <td class="week-label">Week 3</td>
+                  <td>5 / 3 / 1+</td>
+                  <td>Your heaviest week. Go all-out on the final set.</td>
+                </tr>
+                <tr>
+                  <td class="week-label">Week 4</td>
+                  <td>Deload</td>
+                  <td>Light weight, 10 reps each set. Let your body recover — don't skip it.</td>
+                </tr>
+                <tr>
+                  <td class="week-label">Week 5</td>
+                  <td>Hypertrophy</td>
+                  <td>Moderate weights, 10 reps per set. Great for building muscle size.</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+
+          <hr class="help-divider">
+
+          <div class="help-section">
+            <h3>Tips &amp; Features</h3>
+            <ul class="help-tips">
+              <li><strong>Click any lift card</strong> to open a full expanded view with plate-by-plate breakdowns for every set.</li>
+              <li><strong>Hover over a weight</strong> to see a tooltip showing exactly which plates to load on each side of the bar.</li>
+              <li><strong>Click a working set row</strong> (in the expanded view) to highlight it as completed — handy for tracking during a session.</li>
+              <li><strong>Warm-up sets</strong> appear in muted text above the working sets. Do them — they prime your joints and nervous system.</li>
+              <li><strong>Export / Import</strong> lets you save your 1RM data as a JSON file for backup or to move between devices.</li>
+              <li><strong>Theme picker</strong> at the top lets you switch between four color themes.</li>
+              <li>The <strong>Reps-Needed Calculator</strong> at the bottom figures out how many reps at a given weight you'd need to hit a target 1RM.</li>
+            </ul>
+          </div>
+
+        </div>
       </div>
     </div>
 
@@ -1714,11 +1943,34 @@
       if (e.target === document.getElementById('liftModalBackdrop')) closeModal();
     }
 
-    // Escape key closes modal
+    /* ─── Help modal ─────────────────────────────────── */
+    function openHelpModal() {
+      const backdrop = document.getElementById('helpModalBackdrop');
+      backdrop.style.display = 'flex';
+      requestAnimationFrame(() => backdrop.classList.add('open'));
+      document.body.style.overflow = 'hidden';
+    }
+
+    function closeHelpModal() {
+      const backdrop = document.getElementById('helpModalBackdrop');
+      backdrop.classList.remove('open');
+      backdrop.addEventListener('transitionend', () => {
+        backdrop.style.display = 'none';
+        document.body.style.overflow = '';
+      }, { once: true });
+    }
+
+    function handleHelpBackdropClick(e) {
+      if (e.target === document.getElementById('helpModalBackdrop')) closeHelpModal();
+    }
+
+    // Escape key closes any open modal
     document.addEventListener('keydown', e => {
       if (e.key === 'Escape') {
-        const backdrop = document.getElementById('liftModalBackdrop');
-        if (backdrop.classList.contains('open')) { e.preventDefault(); closeModal(); }
+        const liftBackdrop = document.getElementById('liftModalBackdrop');
+        const helpBackdrop = document.getElementById('helpModalBackdrop');
+        if (liftBackdrop.classList.contains('open')) { e.preventDefault(); closeModal(); }
+        else if (helpBackdrop.classList.contains('open')) { e.preventDefault(); closeHelpModal(); }
       }
     });
 
