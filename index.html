@@ -443,6 +443,35 @@
       -moz-appearance: textfield;
     }
 
+    .stepper-row {
+      display: flex;
+      gap: 6px;
+      margin-top: 7px;
+    }
+
+    .btn-stepper {
+      flex: 1;
+      background: var(--btn-ghost-bg);
+      color: var(--btn-ghost-fg);
+      border: 1px solid var(--btn-ghost-bdr);
+      border-radius: 8px;
+      padding: 5px 0;
+      font-family: 'Lexend', sans-serif;
+      font-size: 12px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: opacity 0.15s, transform 0.1s;
+    }
+
+    .btn-stepper:hover {
+      opacity: 0.8;
+      transform: translateY(-1px);
+    }
+
+    .btn-stepper:active {
+      transform: translateY(0);
+    }
+
     .inp-bench {
       border-color: var(--bench-border) !important;
     }
@@ -1348,21 +1377,37 @@
             <label class="label-xs" style="display:block;margin-bottom:6px;color:var(--bench-b);font-weight:600;">Bench
               Press</label>
             <input type="number" id="benchPressInput" class="inp-bench" placeholder="e.g. 225" maxlength="3">
+            <div class="stepper-row">
+              <button class="btn-stepper" onclick="bumpLift('benchPressInput', -5)">−5</button>
+              <button class="btn-stepper" onclick="bumpLift('benchPressInput', 5)">+5</button>
+            </div>
           </div>
           <div>
             <label class="label-xs"
               style="display:block;margin-bottom:6px;color:var(--squat-b);font-weight:600;">Squat</label>
             <input type="number" id="squatInput" class="inp-squat" placeholder="e.g. 315" maxlength="3">
+            <div class="stepper-row">
+              <button class="btn-stepper" onclick="bumpLift('squatInput', -10)">−10</button>
+              <button class="btn-stepper" onclick="bumpLift('squatInput', 10)">+10</button>
+            </div>
           </div>
           <div>
             <label class="label-xs"
               style="display:block;margin-bottom:6px;color:var(--dl-b);font-weight:600;">Deadlift</label>
             <input type="number" id="deadliftInput" class="inp-deadlift" placeholder="e.g. 405" maxlength="3">
+            <div class="stepper-row">
+              <button class="btn-stepper" onclick="bumpLift('deadliftInput', -10)">−10</button>
+              <button class="btn-stepper" onclick="bumpLift('deadliftInput', 10)">+10</button>
+            </div>
           </div>
           <div>
             <label class="label-xs" style="display:block;margin-bottom:6px;color:var(--ohp-b);font-weight:600;">Overhead
               Press</label>
             <input type="number" id="overheadPressInput" class="inp-ohp" placeholder="e.g. 135" maxlength="3">
+            <div class="stepper-row">
+              <button class="btn-stepper" onclick="bumpLift('overheadPressInput', -5)">−5</button>
+              <button class="btn-stepper" onclick="bumpLift('overheadPressInput', 5)">+5</button>
+            </div>
           </div>
         </div>
         <div class="row" style="justify-content: center;">
@@ -1774,6 +1819,14 @@
     }
 
     /* ─── Generate ───────────────────────────────────── */
+    function bumpLift(inputId, delta) {
+      const el = document.getElementById(inputId);
+      const current = parseInt(el.value) || 0;
+      const next = Math.max(45, Math.min(999, current + delta));
+      el.value = next;
+      if (data) onGenerateButtonClick();
+    }
+
     function onGenerateButtonClick() {
       const bench = parseInt(document.getElementById('benchPressInput').value);
       const squat = parseInt(document.getElementById('squatInput').value);
