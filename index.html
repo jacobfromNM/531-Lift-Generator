@@ -1925,7 +1925,7 @@
         1: [{ pct: 0.65, reps: 5 }, { pct: 0.75, reps: 5 }, { pct: 0.85, reps: '5+' }],
         2: [{ pct: 0.70, reps: 3 }, { pct: 0.80, reps: 3 }, { pct: 0.90, reps: '3+' }],
         3: [{ pct: 0.75, reps: 5 }, { pct: 0.85, reps: 3 }, { pct: 0.95, reps: '1+' }],
-        4: [{ pct: 0.55, reps: 10 }, { pct: 0.60, reps: 10 }, { pct: 0.65, reps: 10 }],
+        4: [{ pct: 0.40, reps: 5 }, { pct: 0.50, reps: 5 }, { pct: 0.60, reps: 5 }],
         5: [{ pct: 0.65, reps: 10 }, { pct: 0.70, reps: 10 }, { pct: 0.75, reps: 10 }],
       };
       const work = (workSets[week] || []).map(s => ({ ...s, weight: roundToNearest5(tm * s.pct) }));
