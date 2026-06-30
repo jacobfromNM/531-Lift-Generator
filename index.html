@@ -603,6 +603,72 @@
       border-color: var(--ohp-border);
     }
 
+    /* ── Template (5/3/1 flavor) selector ──────────── */
+    .template-row {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 8px;
+      margin-bottom: 16px;
+    }
+
+    .template-label {
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--gray);
+    }
+
+    .template-tabs {
+      display: flex;
+      justify-content: center;
+      gap: 6px;
+      flex-wrap: wrap;
+    }
+
+    /* Template buttons share the week-tab look but use the theme accent when active */
+    .template-tab {
+      background: var(--week-inactive-bg);
+      color: var(--week-inactive-fg);
+      border: 1px solid var(--week-inactive-bdr);
+      border-radius: 8px;
+      padding: 7px 16px;
+      font-family: 'Lexend', sans-serif;
+      font-size: 12px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: background 0.15s, color 0.15s, border-color 0.15s;
+    }
+
+    .template-tab.active {
+      background: var(--accent-border);
+      color: var(--accent-label);
+      border-color: var(--accent-border);
+    }
+
+    /* Supplemental work rows (BBB / FSL / SSL) sit below the main sets */
+    tbody tr.supplemental td,
+    .lift-modal tbody tr.supplemental td {
+      background: var(--week-inactive-bg);
+    }
+
+    tbody tr.supplemental td.supp-label,
+    .lift-modal tbody tr.supplemental td.supp-label {
+      font-weight: 700;
+      letter-spacing: 0.04em;
+      color: var(--accent-label);
+    }
+
+    /* Assistance note row (Triumvirate) spans the full table width */
+    tbody tr.assist-note td,
+    .lift-modal tbody tr.assist-note td {
+      font-size: 12px;
+      text-align: left;
+      color: var(--gray);
+      font-style: italic;
+    }
+
     /* ── Layout ────────────────────────────────────── */
     .container {
       width: 100%;
@@ -1276,6 +1342,7 @@
 
     /* ── Too-narrow: hide tables, show warning ──── */
     @media (max-width: 460px) {
+
       #weekSelectorRow,
       #liftCards,
       .grid-2-bottom {
@@ -1418,8 +1485,21 @@
         <input type="file" id="fileInput" style="display:none" onchange="loadFile(event)" accept=".json">
       </div>
 
-      <!-- ── Week tabs ── -->
+      <!-- ── Week tabs + template (flavor) selector ── -->
       <div id="weekSelectorRow" style="display:none;">
+        <!-- 5/3/1 flavor / template buttons: change the supplemental work shown on each card -->
+        <div class="template-row">
+          <span class="template-label">5/3/1 Template</span>
+          <div class="template-tabs" id="templateTabs">
+            <button class="template-tab active" data-template="normal" onclick="setTemplate('normal')">Normal
+              5/3/1</button>
+            <button class="template-tab" data-template="bbb" onclick="setTemplate('bbb')">BBB</button>
+            <button class="template-tab" data-template="fsl" onclick="setTemplate('fsl')">FSL</button>
+            <button class="template-tab" data-template="ssl" onclick="setTemplate('ssl')">SSL</button>
+            <button class="template-tab" data-template="triumvirate"
+              onclick="setTemplate('triumvirate')">Triumvirate</button>
+          </div>
+        </div>
         <div class="week-tabs" id="weekTabs">
           <button class="week-tab active-1" onclick="setWeek(1)">Week 1 · 5/5/5+</button>
           <button class="week-tab" onclick="setWeek(2)">Week 2 · 3/3/3+</button>
@@ -1538,7 +1618,8 @@
       <!-- ── Small screen warning ── -->
       <div class="card warning-card"
         style="border:1px solid var(--dl-border);border-top:3px solid var(--dl-m);background:var(--dl-bg);">
-        <p style="color:var(--dl-b);font-size:15px;font-weight:700;margin-bottom:6px;">Uh oh! The screen is too small.</p>
+        <p style="color:var(--dl-b);font-size:15px;font-weight:700;margin-bottom:6px;">Uh oh! The screen is too small.
+        </p>
         <p style="color:var(--fg2);font-size:13px;">Please use a wider device to view your lift tables.</p>
       </div>
 
@@ -1559,7 +1640,8 @@
 
     <!-- ── Help modal ── -->
     <div class="lift-modal-backdrop" id="helpModalBackdrop" onclick="handleHelpBackdropClick(event)">
-      <div class="lift-modal" id="helpModal" style="border-top: 3px solid var(--accent-label); border: 1px solid var(--accent-border); border-top: 3px solid var(--accent-label);">
+      <div class="lift-modal" id="helpModal"
+        style="border-top: 3px solid var(--accent-label); border: 1px solid var(--accent-border); border-top: 3px solid var(--accent-label);">
         <button class="lift-modal-close" onclick="closeHelpModal()" title="Close">✕</button>
         <div class="lift-modal-title">How to Use This App</div>
         <div class="lift-modal-meta">5/3/1 by Jim Wendler &mdash; a simple, proven strength program</div>
@@ -1571,19 +1653,24 @@
             <ol class="help-steps">
               <li>
                 <span class="help-step-num">1</span>
-                <span>Enter your <strong>1-rep max (1RM)</strong> for each lift in the input fields at the top and click <em>Generate Charts</em>. This is the most weight you can lift once with good form.</span>
+                <span>Enter your <strong>1-rep max (1RM)</strong> for each lift in the input fields at the top and click
+                  <em>Generate Charts</em>. This is the most weight you can lift once with good form.</span>
               </li>
               <li>
                 <span class="help-step-num">2</span>
-                <span><strong>Don't know your 1RM?</strong> No problem — use the <em>1RM Calculator</em> at the bottom of the page. Enter a weight you can lift for a few reps and it'll estimate your max for you.</span>
+                <span><strong>Don't know your 1RM?</strong> No problem — use the <em>1RM Calculator</em> at the bottom
+                  of the page. Enter a weight you can lift for a few reps and it'll estimate your max for you.</span>
               </li>
               <li>
                 <span class="help-step-num">3</span>
-                <span>The app sets your <strong>Training Max</strong> to 90% of your 1RM. All your working weights are calculated from this number — it keeps progress conservative and sustainable.</span>
+                <span>The app sets your <strong>Training Max</strong> to 90% of your 1RM. All your working weights are
+                  calculated from this number — it keeps progress conservative and sustainable.</span>
               </li>
               <li>
                 <span class="help-step-num">4</span>
-                <span>Select a week tab to see that week's sets and weights. After finishing all 4 (or 5) weeks, bump each lift by <strong>5 lbs</strong> (upper body) or <strong>10 bs</strong> (lower body) and repeat.</span>
+                <span>Select a week tab to see that week's sets and weights. After finishing all 4 (or 5) weeks, bump
+                  each lift by <strong>5 lbs</strong> (upper body) or <strong>10 bs</strong> (lower body) and
+                  repeat.</span>
               </li>
             </ol>
           </div>
@@ -1633,15 +1720,67 @@
           <hr class="help-divider">
 
           <div class="help-section">
+            <h3>Templates (5/3/1 Flavors)</h3>
+            <p style="margin:0 0 10px;color:var(--gray);font-size:13px;">
+              Pick a template to add supplemental work after the three main sets. Supplemental work
+              applies to weeks 1-3 only; the deload and hypertrophy weeks are unaffected.
+            </p>
+            <table class="help-week-table">
+              <thead>
+                <tr>
+                  <th>Template</th>
+                  <th>Supplemental</th>
+                  <th>Notes</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td class="week-label">Normal 5/3/1</td>
+                  <td>None</td>
+                  <td>Just the three main work sets. Add your own assistance.</td>
+                </tr>
+                <tr>
+                  <td class="week-label">BBB</td>
+                  <td>5 × 10 @ 50%</td>
+                  <td>Boring But Big - high-volume hypertrophy on the main lift.</td>
+                </tr>
+                <tr>
+                  <td class="week-label">FSL</td>
+                  <td>5 × 5 @ first-set %</td>
+                  <td>First Set Last - reuses the week's opening work-set weight.</td>
+                </tr>
+                <tr>
+                  <td class="week-label">SSL</td>
+                  <td>5 × 5 @ second-set %</td>
+                  <td>Second Set Last - a heavier supplemental than FSL.</td>
+                </tr>
+                <tr>
+                  <td class="week-label">Triumvirate</td>
+                  <td>2 assistance lifts</td>
+                  <td>Main lift plus two listed accessory exercises per lift.</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+
+          <hr class="help-divider">
+
+          <div class="help-section">
             <h3>Tips &amp; Features</h3>
             <ul class="help-tips">
-              <li><strong>Click any lift card</strong> to open a full expanded view with plate-by-plate breakdowns for every set.</li>
-              <li><strong>Hover over a weight</strong> to see a tooltip showing exactly which plates to load on each side of the bar.</li>
-              <li><strong>Click a working set row</strong> (in the expanded view) to highlight it as completed — handy for tracking during a session.</li>
-              <li><strong>Warm-up sets</strong> appear in muted text above the working sets. Do them — they prime your joints and nervous system.</li>
-              <li><strong>Export / Import</strong> lets you save your 1RM data as a JSON file for backup or to move between devices.</li>
+              <li><strong>Click any lift card</strong> to open a full expanded view with plate-by-plate breakdowns for
+                every set.</li>
+              <li><strong>Hover over a weight</strong> to see a tooltip showing exactly which plates to load on each
+                side of the bar.</li>
+              <li><strong>Click a working set row</strong> (in the expanded view) to highlight it as completed — handy
+                for tracking during a session.</li>
+              <li><strong>Warm-up sets</strong> appear in muted text above the working sets. Do them — they prime your
+                joints and nervous system.</li>
+              <li><strong>Export / Import</strong> lets you save your 1RM data as a JSON file for backup or to move
+                between devices.</li>
               <li><strong>Theme picker</strong> at the top lets you switch between four color themes.</li>
-              <li>The <strong>Reps-Needed Calculator</strong> at the bottom figures out how many reps at a given weight you'd need to hit a target 1RM.</li>
+              <li>The <strong>Reps-Needed Calculator</strong> at the bottom figures out how many reps at a given weight
+                you'd need to hit a target 1RM.</li>
             </ul>
           </div>
 
@@ -1680,8 +1819,33 @@
     /* ─── State ──────────────────────────────────────── */
     let data = null;
     let currentWeek = 1;
+    let currentTemplate = 'normal';
 
     const WEEK_LABELS = { 1: '5/5/5+', 2: '3/3/3+', 3: '5/3/1+', 4: 'Deload', 5: 'Hypertrophy' };
+
+    /* ─── 5/3/1 templates (flavors) ──────────────────── */
+    // Each template defines the supplemental work appended after the main work
+    // sets. Supplemental only applies to the three main weeks (1-3); the deload
+    // (4) and hypertrophy (5) weeks are left untouched by the template choice.
+    const TEMPLATES = {
+      normal:      { label: 'Normal 5/3/1', supp: null },
+      // Boring But Big: 5 sets of 10 at a flat 50% of TM.
+      bbb:         { label: 'BBB',          supp: { tag: 'BBB', sets: 5, reps: 10, pct: 0.50 } },
+      // First Set Last: 5 sets of 5 at the week's first work-set percentage.
+      fsl:         { label: 'FSL',          supp: { tag: 'FSL', sets: 5, reps: 5, useSetPct: 0 } },
+      // Second Set Last: 5 sets of 5 at the week's second work-set percentage.
+      ssl:         { label: 'SSL',          supp: { tag: 'SSL', sets: 5, reps: 5, useSetPct: 1 } },
+      // Triumvirate: main lift plus two assistance exercises (no extra barbell work).
+      triumvirate: { label: 'Triumvirate',  supp: null },
+    };
+
+    // Wendler's classic Triumvirate assistance pairing, keyed by lift.
+    const TRIUMVIRATE_ASSISTANCE = {
+      benchPress:    ['Dips - 5 × 15', 'DB Row - 5 × 10'],
+      squat:         ['Leg Press - 5 × 15', 'Leg Curl - 5 × 10'],
+      deadlift:      ['Good Morning - 5 × 12', 'Hanging Leg Raise - 5 × 15'],
+      overheadPress: ['Dips - 5 × 15', 'Chin-ups - 5 × 10'],
+    };
 
     const LIFTS = [
       { key: 'benchPress', bodyId: 'benchBody', headId: 'benchHead', metaId: 'benchMeta', tagId: 'benchTag', cls: 'bench' },
@@ -1695,6 +1859,8 @@
       try {
         const saved = localStorage.getItem('531_data');
         const savedWeek = localStorage.getItem('531_week');
+        const savedTemplate = localStorage.getItem('531_template');
+        if (savedTemplate && TEMPLATES[savedTemplate]) currentTemplate = savedTemplate;
         if (saved) {
           data = JSON.parse(saved);
           const d = data;
@@ -1723,20 +1889,68 @@
       return plates.length === 0 ? 'Bar Only' : plates.map(p => p + ' lbs').join(' + ');
     }
 
+    /* ─── Template row builders (shared by card + modal) ─ */
+    // Condensed supplemental work row (BBB / FSL / SSL): "tag · sets × reps".
+    function buildSupplementalRow(supp, liftColor, plateFontSize) {
+      const tr = document.createElement('tr');
+      tr.className = 'supplemental';
+      tr.innerHTML = `
+        <td class="supp-label">${supp.tag}</td>
+        <td>${Math.round(supp.pct * 100)}%</td>
+        <td class="weight-cell">${supp.weight} lbs</td>
+        <td class="reps-cell" style="color:${liftColor}">${supp.sets} × ${supp.reps}</td>
+        <td style="font-size:${plateFontSize}px">${plateTooltip(supp.weight)}</td>`;
+      tr.style.cursor = 'pointer';
+      tr.addEventListener('click', () => tr.classList.toggle('highlighted'));
+      return tr;
+    }
+
+    // Triumvirate assistance note row spanning the full table width.
+    function buildAssistanceRow(dataKey, plateFontSize) {
+      const items = TRIUMVIRATE_ASSISTANCE[dataKey];
+      if (!items) return null;
+      const tr = document.createElement('tr');
+      tr.className = 'assist-note';
+      tr.innerHTML = `<td colspan="5" style="font-size:${plateFontSize}px">Assistance: ${items.join('  ·  ')}</td>`;
+      return tr;
+    }
+
     /* ─── Set schemes ────────────────────────────────── */
-    function getSetsForWeek(trainingMax, week) {
+    function getSetsForWeek(trainingMax, week, template) {
       const tm = trainingMax;
       const warm = [{ pct: 0.35, reps: 5 }, { pct: 0.45, reps: 5 }, { pct: 0.55, reps: 3 }];
+      // Main work sets per week. Weeks 1-3 are the three core 5/3/1 sets; the
+      // supplemental work below is what the chosen template appends.
       const workSets = {
-        1: [{ pct: 0.65, reps: 5 }, { pct: 0.75, reps: 5 }, { pct: 0.85, reps: '5+' }, { pct: 0.55, reps: 10 }],
-        2: [{ pct: 0.70, reps: 3 }, { pct: 0.80, reps: 3 }, { pct: 0.90, reps: '3+' }, { pct: 0.55, reps: 10 }],
-        3: [{ pct: 0.75, reps: 5 }, { pct: 0.85, reps: 3 }, { pct: 0.95, reps: '1+' }, { pct: 0.55, reps: 10 }],
+        1: [{ pct: 0.65, reps: 5 }, { pct: 0.75, reps: 5 }, { pct: 0.85, reps: '5+' }],
+        2: [{ pct: 0.70, reps: 3 }, { pct: 0.80, reps: 3 }, { pct: 0.90, reps: '3+' }],
+        3: [{ pct: 0.75, reps: 5 }, { pct: 0.85, reps: 3 }, { pct: 0.95, reps: '1+' }],
         4: [{ pct: 0.55, reps: 10 }, { pct: 0.60, reps: 10 }, { pct: 0.65, reps: 10 }],
         5: [{ pct: 0.65, reps: 10 }, { pct: 0.70, reps: 10 }, { pct: 0.75, reps: 10 }],
       };
+      const work = (workSets[week] || []).map(s => ({ ...s, weight: roundToNearest5(tm * s.pct) }));
+
+      // Supplemental work only applies to the three main weeks (1-3).
+      let supplemental = null;
+      const tpl = TEMPLATES[template] || TEMPLATES.normal;
+      if (tpl.supp && week >= 1 && week <= 3) {
+        // FSL/SSL reuse a main work-set percentage; BBB uses its own flat pct.
+        const pct = tpl.supp.useSetPct != null
+          ? workSets[week][tpl.supp.useSetPct].pct
+          : tpl.supp.pct;
+        supplemental = {
+          tag: tpl.supp.tag,
+          sets: tpl.supp.sets,
+          reps: tpl.supp.reps,
+          pct,
+          weight: roundToNearest5(tm * pct),
+        };
+      }
+
       return {
         warm: warm.map(s => ({ ...s, weight: roundToNearest5(tm * s.pct) })),
-        work: (workSets[week] || []).map(s => ({ ...s, weight: roundToNearest5(tm * s.pct) })),
+        work,
+        supplemental,
       };
     }
 
@@ -1751,11 +1965,12 @@
       document.getElementById('weekSelectorRow').style.display = 'block';
       document.getElementById('liftCards').style.display = 'block';
       updateWeekTabs();
+      updateTemplateTabs();
 
       LIFTS.forEach(({ key, bodyId, headId, metaId, tagId, cls }) => {
         const max = data[key];
         const tm = roundToNearest5(max * 0.9);
-        const { warm, work } = getSetsForWeek(tm, currentWeek);
+        const { warm, work, supplemental } = getSetsForWeek(tm, currentWeek, currentTemplate);
         const varName = cls === 'deadlift' ? 'dl' : cls;
 
         document.getElementById(metaId).textContent = `1RM: ${max} lbs · Training Max: ${tm} lbs`;
@@ -1800,6 +2015,15 @@
           tr.addEventListener('click', () => tr.classList.toggle('highlighted'));
           tbody.appendChild(tr);
         });
+
+        // Supplemental work (BBB / FSL / SSL) on the three main weeks
+        if (supplemental) tbody.appendChild(buildSupplementalRow(supplemental, liftColor, 12));
+
+        // Triumvirate assistance note on the three main weeks
+        if (currentTemplate === 'triumvirate' && currentWeek <= 3) {
+          const note = buildAssistanceRow(key, 12);
+          if (note) tbody.appendChild(note);
+        }
       });
     }
 
@@ -1815,6 +2039,21 @@
       document.querySelectorAll('.week-tab').forEach((tab, i) => {
         tab.className = 'week-tab';
         if (i + 1 === currentWeek) tab.classList.add(`active-${currentWeek}`);
+      });
+    }
+
+    /* ─── Template (flavor) selector ─────────────────── */
+    function setTemplate(t) {
+      if (!TEMPLATES[t]) return;
+      currentTemplate = t;
+      localStorage.setItem('531_template', t);
+      updateTemplateTabs();
+      renderAll();
+    }
+
+    function updateTemplateTabs() {
+      document.querySelectorAll('.template-tab').forEach(tab => {
+        tab.classList.toggle('active', tab.dataset.template === currentTemplate);
       });
     }
 
@@ -1917,9 +2156,10 @@
     function openModal(liftKey) {
       if (!data) return;
       const { title, cls, varPfx } = MODAL_META[liftKey];
-      const max = data[DATA_KEY[liftKey]];
+      const dataKey = DATA_KEY[liftKey];
+      const max = data[dataKey];
       const tm = roundToNearest5(max * 0.9);
-      const { warm, work } = getSetsForWeek(tm, currentWeek);
+      const { warm, work, supplemental } = getSetsForWeek(tm, currentWeek, currentTemplate);
       const liftColor = cssVar(`--${varPfx}-b`);
       const borderColor = cssVar(`--${varPfx}-border`);
       const thBg = cssVar(`--${varPfx}-th`);
@@ -1927,7 +2167,7 @@
       // Header content
       document.getElementById('modalTitle').textContent = title;
       document.getElementById('modalMeta').textContent =
-        `1RM: ${max} lbs · Training Max: ${tm} lbs · ${WEEK_LABELS[currentWeek]}`;
+        `1RM: ${max} lbs · Training Max: ${tm} lbs · ${WEEK_LABELS[currentWeek]} · ${TEMPLATES[currentTemplate].label}`;
 
       // Apply lift-colour border-top to modal
       const modal = document.getElementById('liftModal');
@@ -1973,6 +2213,15 @@
         tr.addEventListener('click', () => tr.classList.toggle('highlighted'));
         tbody.appendChild(tr);
       });
+
+      // Supplemental work (BBB / FSL / SSL) on the three main weeks
+      if (supplemental) tbody.appendChild(buildSupplementalRow(supplemental, liftColor, 13));
+
+      // Triumvirate assistance note on the three main weeks
+      if (currentTemplate === 'triumvirate' && currentWeek <= 3) {
+        const note = buildAssistanceRow(dataKey, 13);
+        if (note) tbody.appendChild(note);
+      }
 
       // Show
       const backdrop = document.getElementById('liftModalBackdrop');
